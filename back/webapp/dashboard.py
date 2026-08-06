@@ -12,20 +12,25 @@ from webapp.pipeline import ACERTO, ERRO, NAO_RESPONDEU, RESULT_ORDER
 
 # Status palette - fixed roles, never reused as series colors. The legend and the
 # direct labels carry the meaning too, so nothing rides on hue alone.
+#
+# Steps derived from the CPE USP palette (#3676bb blue, #ef7b17 orange) and then
+# snapped until every check passed against the surfaces below. Blue vs orange
+# instead of the green/red this used to carry: that pair measured only ΔE 4.1
+# under deuteranopia, far below the 6-8 floor, while blue/orange clears 16.
 RESULT_COLORS = {
-    ACERTO: "#0ca30c",
-    ERRO: "#d03b3b",
-    NAO_RESPONDEU: "#8a8a80",
+    "light": {ACERTO: "#2f6cae", ERRO: "#d96e10", NAO_RESPONDEU: "#748ba3"},
+    "dark": {ACERTO: "#4a8ed0", ERRO: "#d1740f", NAO_RESPONDEU: "#7f93a8"},
 }
-# Acerto/erro are green vs red - the pair a deuteranope cannot separate by hue.
-# Texture carries the same distinction, so nothing depends on color alone.
+# Texture repeats the distinction for print and forced-colors, where hue is lost
+# entirely - the palette no longer depends on it, but the fallback stays.
 RESULT_PATTERNS = {ACERTO: "", ERRO: "/", NAO_RESPONDEU: "."}
-ACCENT = {"light": "#2a78d6", "dark": "#3987e5"}
+ACCENT = {"light": "#3676bb", "dark": "#4a8ed0"}
 
-GRID_COLOR = {"light": "rgba(11,11,11,0.10)", "dark": "rgba(255,255,255,0.12)"}
-TEXT_COLOR = {"light": "#52514e", "dark": "#c3c2b7"}
-# Streamlit's own page background - used as the spacer between stacked segments
-SURFACE = {"light": "#ffffff", "dark": "#0e1117"}
+GRID_COLOR = {"light": "rgba(17,56,92,0.12)", "dark": "rgba(232,238,244,0.12)"}
+TEXT_COLOR = {"light": "#4a5a6e", "dark": "#a8bacd"}
+# The page background set in .streamlit/config.toml - used as the spacer between
+# stacked segments and as the pattern background
+SURFACE = {"light": "#f6f6f6", "dark": "#0d1b2a"}
 
 
 def style(fig, mode="light", height=420, showlegend=True, bargap=0.4):
@@ -82,7 +87,7 @@ def _result_bars(long_results, dimension, mode, height, tickangle=0):
         barmode="group",
         text="Quantidade",
         category_orders={"Resultado": RESULT_ORDER},
-        color_discrete_map=RESULT_COLORS,
+        color_discrete_map=RESULT_COLORS[mode],
         pattern_shape_map=RESULT_PATTERNS,
     )
     fig.update_traces(
@@ -149,8 +154,12 @@ def accuracy_by_question(long_results, mode="light", height=430, sort_by_rate=Fa
         y=overall,
         line=dict(color=TEXT_COLOR[mode], width=1, dash="dash"),
         annotation_text=f"média geral {overall}%",
-        annotation_position="top right",
+        # À esquerda para não encostar na borda, e sobre a superfície da página
+        # para continuar legível quando uma barra alta passar por baixo
+        annotation_position="top left",
         annotation_font=dict(color=TEXT_COLOR[mode], size=12),
+        annotation_bgcolor=SURFACE[mode],
+        annotation_borderpad=3,
     )
     fig.update_xaxes(
         type="category",
@@ -179,7 +188,7 @@ def ranking_by_student(long_results, mode="light", height=None):
             name=result,
             orientation="h",
             marker=dict(
-                color=RESULT_COLORS[result],
+                color=RESULT_COLORS[mode][result],
                 line=dict(width=2, color=SURFACE[mode]),
                 pattern=dict(
                     shape=RESULT_PATTERNS[result],

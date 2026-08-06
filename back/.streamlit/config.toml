@@ -1,0 +1,40 @@
+# Identidade visual CPE USP.
+#
+# Paleta da marca: #11385c (azul escuro) · #ef7b17 (laranja) · #3676bb (azul) ·
+# #72a4d6 (azul claro) · #f6f6f6 (off-white).
+#
+# Os passos usados nos graficos ficam em webapp/dashboard.py - sao versoes
+# ajustadas destes valores para passar nos testes de contraste e daltonismo
+# contra as superficies definidas aqui.
+
+[theme]
+base = "light"
+headingFont = "League Spartan"
+font = "Open Sans"
+baseRadius = "0.5rem"
+buttonRadius = "0.5rem"
+
+# League Spartan para titulos e Open Sans para corpo - as duas fontes da marca
+# que tem licenca aberta. Katahdin Round, Agrandir Grand e Montserrat Classic
+# sao comerciais e ficam de fora.
+[[theme.fontFaces]]
+family = "League Spartan"
+url = "https://fonts.gstatic.com/s/leaguespartan/v22/kJEnBuEW6A0lliaV_m88ja5TwtE8ZI9Rk1Q.woff2"
+weight = 700
+
+[[theme.fontFaces]]
+family = "Open Sans"
+url = "https://fonts.gstatic.com/s/opensans/v43/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTSKmu1aB.woff2"
+weight = 400
+
+[theme.light]
+primaryColor = "#3676bb"
+backgroundColor = "#f6f6f6"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#1c2b3f"
+
+[theme.dark]
+primaryColor = "#4a8ed0"
+backgroundColor = "#0d1b2a"
+secondaryBackgroundColor = "#14263a"
+textColor = "#e8eef4"

@@ -1,0 +1,17 @@
+# Ambientes virtuais Python
+.venv/
+venv/
+env/
+
+# Bytecode e caches
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Artefatos do WSL/Windows
+*:Zone.Identifier
+
+# Sistema operacional
+.DS_Store
+Thumbs.db

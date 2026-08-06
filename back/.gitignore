@@ -2,6 +2,8 @@
 **/\.*/
 # Except .github
 !.github/
+# ...and .streamlit, que carrega o tema da identidade visual
+!.streamlit/
 
 # Everything in inputs/ and outputs/
 inputs/*
