@@ -14,6 +14,7 @@ from src.schemas.constants import (
     DEFAULT_SECTION_KEY,
     MARKING_VERDICT_TYPES,
 )
+from src.utils.image import ImageUtils
 from src.utils.parsing import (
     get_concatenated_response,
     open_evaluation_with_validation,
@@ -240,7 +241,7 @@ class EvaluationConfig:
                     f"Attempting to generate answer key from image: '{image_path}'"
                 )
                 # TODO: use a common function for below changes?
-                in_omr = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+                in_omr = ImageUtils.read_img(image_path, cv2.IMREAD_GRAYSCALE)
                 in_omr = template.image_instance_ops.apply_preprocessors(
                     image_path, in_omr, template
                 )

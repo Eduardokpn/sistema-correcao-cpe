@@ -4,7 +4,6 @@ Same story the dashboards-automatizados app tells (desempenho por área, por
 subárea e por questão), built from the ResultsByQuestion sheet instead of a
 hand-made spreadsheet.
 """
-import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
@@ -25,6 +24,13 @@ RESULT_COLORS = {
 # entirely - the palette no longer depends on it, but the fallback stays.
 RESULT_PATTERNS = {ACERTO: "", ERRO: "/", NAO_RESPONDEU: "."}
 ACCENT = {"light": "#3676bb", "dark": "#4a8ed0"}
+# Texto escrito por dentro do segmento. Cada fundo pede o seu: branco sobre o
+# azul claro perde contraste, escuro sobre o azul escuro também - os valores
+# abaixo são os que passam de 4.5:1 em cada combinação.
+INSIDE_TEXT = {
+    "light": {ACERTO: "#ffffff", ERRO: "#0d1b2a", NAO_RESPONDEU: "#0d1b2a"},
+    "dark": {ACERTO: "#0d1b2a", ERRO: "#0d1b2a", NAO_RESPONDEU: "#0d1b2a"},
+}
 
 GRID_COLOR = {"light": "rgba(17,56,92,0.12)", "dark": "rgba(232,238,244,0.12)"}
 TEXT_COLOR = {"light": "#4a5a6e", "dark": "#a8bacd"}
@@ -63,52 +69,104 @@ def style(fig, mode="light", height=420, showlegend=True, bargap=0.4):
     return fig
 
 
-def _result_bars(long_results, dimension, mode, height, tickangle=0):
-    # Every result gets a slot in every group, so an absent combination reads as
-    # zero instead of shifting the remaining bars sideways
-    categories = sorted(long_results[dimension].dropna().unique())
+def performance_by_dimension(long_results, dimension, mode="light", height=None):
+    """Acerto / erro / em branco por área ou subárea, em percentual.
+
+    Mesma leitura do gráfico por aluno - uma barra dividida entre os três
+    resultados -, só que em percentual em vez de contagem: as áreas têm números
+    diferentes de questões, e na contagem a maior sempre parecia a pior.
+    """
     counts = (
         long_results.groupby([dimension, "Resultado"], dropna=False)
         .size()
-        .reindex(
-            pd.MultiIndex.from_product(
-                [categories, RESULT_ORDER], names=[dimension, "Resultado"]
+        .unstack("Resultado", fill_value=0)
+        # Um resultado que não apareceu em nenhuma área ainda precisa de coluna
+        .reindex(columns=RESULT_ORDER, fill_value=0)
+    )
+    if counts.empty:
+        return style(go.Figure(), mode, height=height or 240, showlegend=False)
+
+    respostas = counts.sum(axis=1)
+    shares = counts.div(respostas.replace(0, 1), axis=0) * 100
+    # Mesma ordem do gráfico por aluno: maior acerto no topo, já que em barra
+    # horizontal a primeira linha vai para baixo
+    shares = shares.sort_values(ACERTO)
+    counts, respostas = counts.loc[shares.index], respostas.loc[shares.index]
+
+    # A porcentagem sozinha esconde o tamanho da amostra - 100% de uma questão
+    # só não é a mesma notícia que 100% de doze
+    questoes = long_results.groupby(dimension)["Questão"].nunique()
+    labels = [
+        f"{name}<br>{total} {'questão' if total == 1 else 'questões'}"
+        for name, total in ((name, questoes.get(name, 0)) for name in shares.index)
+    ]
+
+    fig = go.Figure()
+    for result in RESULT_ORDER:
+        fig.add_bar(
+            y=labels,
+            x=shares[result],
+            name=result,
+            orientation="h",
+            marker=dict(
+                color=RESULT_COLORS[mode][result],
+                line=dict(width=2, color=SURFACE[mode]),
+                pattern=dict(
+                    shape=RESULT_PATTERNS[result],
+                    size=7,
+                    solidity=0.22,
+                    fgcolor=SURFACE[mode],
+                ),
             ),
-            fill_value=0,
+            # Some quando o segmento fica estreito demais para o texto
+            text=[f"{share:.0f}%" if share >= 10 else "" for share in shares[result]],
+            textposition="inside",
+            insidetextanchor="middle",
+            textfont=dict(color=INSIDE_TEXT[mode][result], size=13),
+            customdata=list(zip(counts[result], respostas)),
+            hovertemplate=(
+                "<b>%{y}</b><br>"
+                + result
+                + ": %{x:.0f}% (%{customdata[0]} de %{customdata[1]} respostas)"
+                "<extra></extra>"
+            ),
         )
-        .reset_index(name="Quantidade")
-    )
-    fig = px.bar(
-        counts,
-        x=dimension,
-        y="Quantidade",
-        color="Resultado",
-        pattern_shape="Resultado",
-        barmode="group",
-        text="Quantidade",
-        category_orders={"Resultado": RESULT_ORDER},
-        color_discrete_map=RESULT_COLORS[mode],
-        pattern_shape_map=RESULT_PATTERNS,
-    )
-    fig.update_traces(
-        marker_cornerradius=6,
-        marker_line_width=0,
-        marker_pattern_size=7,
-        marker_pattern_solidity=0.22,
-        marker_pattern_fgcolor=SURFACE[mode],
-        textposition="outside",
-        cliponaxis=False,
-        hovertemplate="<b>%{x}</b><br>%{fullData.name}: %{y}<extra></extra>",
-    )
-    fig.update_xaxes(title_text="", tickangle=tickangle)
-    fig.update_yaxes(title_text="Questões")
-    return style(fig, mode, height=height)
 
+    overall = counts[ACERTO].sum() / max(respostas.sum(), 1) * 100
+    fig.add_vline(
+        x=overall,
+        line=dict(color=TEXT_COLOR[mode], width=1, dash="dash"),
+        annotation_text=f"média da turma {overall:.0f}%",
+        # Para o lado com espaço, senão o texto sai do gráfico quando a média
+        # fica perto de uma das bordas
+        annotation_position="top left" if overall >= 50 else "top right",
+        annotation_font=dict(color=TEXT_COLOR[mode], size=12),
+        annotation_bgcolor=SURFACE[mode],
+        annotation_borderpad=3,
+        # Acima da primeira barra, senão o texto cai em cima dela
+        annotation_yshift=14,
+    )
 
-def performance_by_dimension(long_results, dimension, mode="light", height=420):
-    """Acerto / erro / em branco per área or subárea."""
-    tickangle = -30 if long_results[dimension].nunique() > 5 else 0
-    return _result_bars(long_results, dimension, mode, height, tickangle)
+    fig.update_layout(barmode="stack")
+    fig.update_xaxes(
+        title_text="",
+        range=[0, 100],
+        dtick=25,
+        ticksuffix="%",
+        showgrid=True,
+        gridcolor=GRID_COLOR[mode],
+    )
+    # automargin porque o rótulo de duas linhas é mais largo que a margem fixa
+    fig.update_yaxes(title_text="", showgrid=False, automargin=True)
+    fig = style(
+        fig,
+        mode,
+        height=height or max(260, 64 * len(shares) + 110),
+        bargap=0.45,
+    )
+    # Depois do style, que redefine a margem: espaço no topo para a anotação da
+    # média não encostar na primeira barra, e à direita para o tick de 100%
+    return fig.update_layout(margin_t=30, margin_r=28)
 
 
 def accuracy_by_question(long_results, mode="light", height=430, sort_by_rate=False):

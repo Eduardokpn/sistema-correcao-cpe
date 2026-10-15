@@ -196,7 +196,7 @@ class CropOnMarkers(ImagePreprocessor):
             )
             exit(31)
 
-        marker = cv2.imread(self.marker_path, cv2.IMREAD_GRAYSCALE)
+        marker = ImageUtils.read_img(self.marker_path, cv2.IMREAD_GRAYSCALE)
 
         if "sheetToMarkerWidthRatio" in marker_ops:
             marker = ImageUtils.resize_util(
