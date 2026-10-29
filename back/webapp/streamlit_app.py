@@ -32,14 +32,18 @@ from webapp.pipeline import (
     to_long_format,
 )
 
-# Este módulo vive em back/webapp/, mas inputs/ e assets/ ficam na raiz do back/
+# Este módulo vive em back/webapp/, mas folha-cpe/ e assets/ ficam na raiz do back/
 PROJECT_DIR = Path(__file__).resolve().parent.parent
-DEFAULT_INPUTS_DIR = PROJECT_DIR.joinpath("inputs")
+FOLHA_DIR = PROJECT_DIR.joinpath("folha-cpe")
 ASSETS_DIR = PROJECT_DIR.joinpath("assets")
-# A folha de resposta é sempre a mesma, então template e config saem da tela e
-# são lidos direto de inputs/
-TEMPLATE_PATH = DEFAULT_INPUTS_DIR.joinpath("template.json")
-CONFIG_PATH = DEFAULT_INPUTS_DIR.joinpath("config.json")
+# Template e config saem da tela e são lidos de folha-cpe/, um template por
+# tamanho de prova. A prova de 72 questões usa a folha de 90 e para na q72.
+QUESTION_COUNTS = (72, 80, 90)
+DEFAULT_QUESTION_COUNT = 80
+TEMPLATE_PATHS = {
+    count: FOLHA_DIR.joinpath(f"template_{count}.json") for count in QUESTION_COUNTS
+}
+CONFIG_PATH = FOLHA_DIR.joinpath("config.json")
 
 # Paleta da marca. O azul escuro é a superfície da sidebar; o laranja é o único
 # acento, e fica só na moldura (régua, item ativo, botão de ação) - dentro dos
@@ -313,6 +317,20 @@ def pick_column(columns, hints, exclude=()):
     return None
 
 
+def answer_key_mismatch(answer_key, question_column, question_count):
+    """Questões do gabarito que a folha não tem, e questões da folha sem gabarito."""
+    sheet_questions = [f"q{number}" for number in range(1, question_count + 1)]
+    key_questions = answer_key[question_column].tolist()
+    outside_sheet = [q for q in key_questions if q not in set(sheet_questions)]
+    without_answer = [q for q in sheet_questions if q not in set(key_questions)]
+    return outside_sheet, without_answer
+
+
+def short_list(items, limit=6):
+    shown = ", ".join(str(item) for item in items[:limit])
+    return shown + (f" e mais {len(items) - limit}" if len(items) > limit else "")
+
+
 def read_answer_key(uploaded_file):
     """Reads the answer key from a csv (any common separator) or xlsx upload."""
     suffix = Path(uploaded_file.name).suffix.lower()
@@ -439,12 +457,6 @@ st.markdown(
 # 1. Correção
 # --------------------------------------------------------------------------- #
 if SECAO == "correcao":
-    if not TEMPLATE_PATH.exists():
-        st.error(
-            f"O template da folha não foi encontrado em `inputs/{TEMPLATE_PATH.name}`. "
-            "Coloque o arquivo lá para poder corrigir as provas."
-        )
-
     st.subheader("Gabarito")
     answer_key_file = st.file_uploader(
         "Planilha do gabarito (csv ou xlsx)",
@@ -477,6 +489,46 @@ if SECAO == "correcao":
         st.info("Envie o gabarito para continuar.")
 
     st.divider()
+    st.subheader("Tamanho da prova")
+    key_size = len(answer_key) if question_column is not None else None
+    question_count = st.radio(
+        "Quantidade de questões",
+        QUESTION_COUNTS,
+        # Começa no tamanho do gabarito enviado; a chave muda com o arquivo para
+        # que um gabarito novo volte a escolher sozinho
+        index=QUESTION_COUNTS.index(
+            key_size if key_size in QUESTION_COUNTS else DEFAULT_QUESTION_COUNT
+        ),
+        format_func=lambda count: f"{count} questões",
+        horizontal=True,
+        key=f"question_count_{answer_key_file.name if answer_key_file else ''}",
+        help="A prova de 72 questões usa a folha de 90 e só lê até a questão 72.",
+    )
+    template_path = TEMPLATE_PATHS[question_count]
+    if not template_path.exists():
+        st.error(
+            f"O template da folha não foi encontrado em `folha-cpe/{template_path.name}`."
+        )
+
+    outside_sheet = []
+    if question_column is not None and answer_column is not None:
+        outside_sheet, without_answer = answer_key_mismatch(
+            answer_key, question_column, question_count
+        )
+        if outside_sheet:
+            st.error(
+                f"O gabarito tem questões que a folha de {question_count} não tem: "
+                f"{short_list(outside_sheet)}. As questões precisam se chamar q1, q2, … "
+                f"até q{question_count}."
+            )
+        elif without_answer:
+            st.warning(
+                f"A folha de {question_count} questões vai ler "
+                f"{short_list(without_answer)}, que não estão no gabarito. "
+                "Confira se o tamanho da prova está certo."
+            )
+
+    st.divider()
     st.subheader("Provas escaneadas")
     exam_files = st.file_uploader(
         "Imagens das folhas de resposta",
@@ -487,9 +539,10 @@ if SECAO == "correcao":
         st.caption(f"{len(exam_files)} arquivo(s) prontos para correção.")
 
     ready = (
-        TEMPLATE_PATH.exists()
+        template_path.exists()
         and question_column is not None
         and answer_column is not None
+        and not outside_sheet
         and bool(exam_files)
     )
     if st.button(
@@ -502,7 +555,7 @@ if SECAO == "correcao":
             try:
                 correction = run_correction(
                     images=[(f.name, f.getvalue()) for f in exam_files],
-                    template_bytes=TEMPLATE_PATH.read_bytes(),
+                    template_bytes=template_path.read_bytes(),
                     answer_key=answer_key,
                     question_column=question_column,
                     answer_column=answer_column,
