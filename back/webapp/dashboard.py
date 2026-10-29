@@ -238,6 +238,9 @@ def ranking_by_student(long_results, mode="light", height=None):
         .reindex(columns=RESULT_ORDER, fill_value=0)
         .sort_values(ACERTO)
     )
+    questoes = counts.sum(axis=1)
+    shares = counts.div(questoes.replace(0, 1), axis=0) * 100
+
     fig = go.Figure()
     for result in RESULT_ORDER:
         fig.add_bar(
@@ -255,9 +258,26 @@ def ranking_by_student(long_results, mode="light", height=None):
                     fgcolor=SURFACE[mode],
                 ),
             ),
-            hovertemplate="<b>%{y}</b><br>" + result + ": %{x}<extra></extra>",
+            # Percentual e quantidade de questões em cada cor; segmento vazio
+            # fica sem texto
+            text=[
+                f"{share:.0f}% ({count})" if count else ""
+                for share, count in zip(shares[result], counts[result])
+            ],
+            textposition="inside",
+            insidetextanchor="middle",
+            textfont=dict(color=INSIDE_TEXT[mode][result], size=12),
+            customdata=list(zip(shares[result], questoes)),
+            hovertemplate=(
+                "<b>%{y}</b><br>"
+                + result
+                + ": %{x} de %{customdata[1]} questões (%{customdata[0]:.0f}%)"
+                "<extra></extra>"
+            ),
         )
-    fig.update_layout(barmode="stack")
+    # Texto que não cabe no segmento some em vez de encolher até ficar ilegível;
+    # o hover continua com o número completo
+    fig.update_layout(barmode="stack", uniformtext_minsize=10, uniformtext_mode="hide")
     fig.update_xaxes(title_text="Questões", showgrid=True, gridcolor=GRID_COLOR[mode])
     fig.update_yaxes(title_text="", showgrid=False)
     return style(

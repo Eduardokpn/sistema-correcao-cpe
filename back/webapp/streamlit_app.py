@@ -747,6 +747,10 @@ elif SECAO == "dashboard":
 
             secao += 1
             st.subheader(f"{secao}. Desempenho por aluno")
+            st.caption(
+                "Em cada cor, o percentual das questões do aluno e, entre "
+                "parênteses, quantas foram."
+            )
             st.plotly_chart(
                 dashboard.ranking_by_student(filtered, MODE),
                 width="stretch",
