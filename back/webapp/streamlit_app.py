@@ -8,10 +8,15 @@ Uso, a partir da raiz do back/: streamlit run webapp/streamlit_app.py
 import base64
 import io
 import shutil
+import sys
 from pathlib import Path
 
 import pandas as pd
 import streamlit as st
+
+# No Streamlit Community Cloud o app roda a partir da raiz do repositório, e não
+# do back/, então webapp/ e src/ precisam ser achados a partir deste arquivo
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from webapp import dashboard
 from webapp.pipeline import (
