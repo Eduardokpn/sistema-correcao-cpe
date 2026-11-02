@@ -8,8 +8,8 @@ services:
       CPE_DATABASE_URL: sqlite:///data/cpe_omr.db
       CPE_API_HOST: 0.0.0.0
       CPE_API_PORT: 8001
-    ports:
-      - "8001:8001"
+    networks:
+      - cpe-proxy
     volumes:
       - ./back:/app:rw
       - sqlite-data:/app/data
@@ -22,25 +22,17 @@ services:
     container_name: cpe-dashboard
     environment:
       CPE_API_URL: http://api:8001
+    networks:
+      - cpe-proxy
     depends_on:
       - api
-    ports:
-      - "8501:8501"
     volumes:
       - ./front:/app:rw
     restart: unless-stopped
 
-  nginx:
-    image: nginx:alpine
-    container_name: cpe-nginx
-    depends_on:
-      - api
-      - dashboard
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    restart: unless-stopped
+networks:
+  cpe-proxy:
+    external: true
 
 volumes:
   sqlite-data:
