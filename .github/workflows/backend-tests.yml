@@ -32,6 +32,10 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt -r requirements-dev.txt
 
-      # pytest.ini lists the suites: the OMR engine (src), data, grading and api
-      - name: Run pytest
+      - name: App tests (db, grading, api)
+        run: python -m pytest
+
+      # The engine's tests and snapshots use paths relative to its own folder
+      - name: OMR engine tests
+        working-directory: back/omrchecker
         run: python -m pytest

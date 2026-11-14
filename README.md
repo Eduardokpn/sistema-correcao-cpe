@@ -16,8 +16,8 @@ Três camadas, com fronteiras claras:
 │  (UI fina)  │ <────────────────── │  api/     FastAPI (HTTP)     │
 └─────────────┘   long-format rows  │  grading/ pipeline OMR +     │
                                     │           ingestão           │
-                                    │  data/    SQLAlchemy + banco │
-                                    │  src/     motor OMR (core)   │
+                                    │  db/      SQLAlchemy + banco │
+                                    │  omrchecker/  motor OMR      │
                                     └────────────────┬─────────────┘
                                                      │
                                               ┌──────┴───────┐
@@ -36,9 +36,12 @@ Três camadas, com fronteiras claras:
   e as respostas para as perguntas dos professores.
 - **`back/grading/`** — roda o pipeline OMR sobre as imagens e transforma a
   planilha `ResultsByQuestion` em registros do banco.
-- **`back/data/`** — modelos SQLAlchemy, sessão e camada de repositório
+- **`back/db/`** — modelos SQLAlchemy, sessão e camada de repositório
   (reutilizável pela API e por scripts). Migrações via Alembic.
-- **`back/src/`** — o motor OMR (fork do OMRChecker), praticamente intocado.
+- **`back/omrchecker/`** — o motor OMR (cópia do OMRChecker), no layout original
+  do projeto e praticamente intocado: código em `omrchecker/src/`, mais as
+  amostras, a documentação e a licença dele. Só `back/grading/pipeline.py`
+  importa o motor.
 
 ### Modelo de dados
 
@@ -59,7 +62,7 @@ As perguntas frequentes dos professores viram consultas diretas:
 ## Como rodar
 
 Pré-requisitos: Python 3.12 (a versão das imagens Docker e a usada nos testes) e o stack do OMRChecker (OpenCV etc.) para a correção
-de imagens. Ver `back/README.md` para as dependências de sistema do OpenCV.
+de imagens. Ver `back/omrchecker/README.md` para as dependências de sistema do OpenCV.
 
 O backend e o frontend são serviços separados e cada um usa seu próprio ambiente
 virtual (eles pedem versões incompatíveis de `starlette`, então não compartilham
@@ -179,9 +182,9 @@ Para um tamanho novo de prova que use uma das folhas atuais, crie um
 [front/app.py](front/app.py).
 
 O alinhamento pelos cantos é feito pelo pré-processador
-[CropOnCornerMarks](back/src/processors/CropOnCornerMarks.py), ativado no
+[CropOnCornerMarks](back/omrchecker/src/processors/CropOnCornerMarks.py), ativado no
 template pela seção `preProcessors`. Para conferir um template, rode a correção
-pela linha de comando (`python main.py -i pasta -o saida`, com o template
+pela linha de comando (em `back/omrchecker/`: `python main.py -i pasta -o saida`, com o template
 copiado para a pasta como `template.json`) e abra as imagens de
 `saida/CheckedOMRs/`: cada marcação lida deve ficar sobre a bolha correspondente.
 
@@ -200,21 +203,21 @@ copiado para a pasta como `template.json`) e abra as imagens de
 Com cada venv ativado (ver acima):
 
 ```bash
-# Backend (dados, grading, api)
-cd back && python -m pytest data/tests grading/tests api/tests
+# Backend (banco, grading, api)
+cd back && python -m pytest
 
 # Frontend (gráficos + app)
 cd front && python -m pytest tests
 
-# Suite do motor OMR (precisa do stack OpenCV)
-cd back && python -m pytest src/tests
+# Suite do motor OMR (precisa do stack OpenCV; roda de dentro da pasta dele)
+cd back/omrchecker && python -m pytest
 ```
 
-> As amostras em `src/tests/test_all_samples.py` comparam a saída do pipeline com
+> As amostras em `back/omrchecker/src/tests/test_all_samples.py` comparam a saída do pipeline com
 > snapshots (`syrupy`). O nome dos arquivos de saída inclui a hora local, então
 > `src/tests/conftest.py` fixa o fuso em que os snapshots foram gravados. Depois
 > de uma mudança intencional no formato de saída, regrave com
-> `python -m pytest src/tests --snapshot-update` e revise o diff.
+> `python -m pytest --snapshot-update` (em `back/omrchecker/`) e revise o diff.
 
 ## Migrações do banco
 
@@ -224,7 +227,7 @@ sozinha, então `alembic upgrade head` é sempre a forma de preparar o banco.
 ```bash
 cd back
 alembic upgrade head                         # aplica as migrações
-alembic revision --autogenerate -m "mudança" # gera uma nova após editar data/models.py
+alembic revision --autogenerate -m "mudança" # gera uma nova após editar db/models.py
 alembic downgrade -1                          # desfaz a última
 ```
 

@@ -10,7 +10,7 @@ services:
     environment:
       # Everything that must survive a rebuild lives in /var/lib/cpe (the
       # sqlite-data volume): the database and the files of each grading.
-      # It used to be mounted at /app/data, on top of the `data` Python package,
+      # It used to be mounted at /app/data, on top of the `data` Python package (now `db`),
       # which froze that package at whatever the image had on first run.
       CPE_DATABASE_URL: sqlite:////var/lib/cpe/cpe_omr.db
       CPE_ARTIFACTS_DIR: /var/lib/cpe/gradings

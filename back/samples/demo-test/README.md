@@ -54,7 +54,7 @@ Se você tiver imagens escaneadas das provas:
 
 ---
 
-Para mais exemplos, veja `samples/` no root do projeto (o OMRChecker traz
+Para mais exemplos, veja `back/omrchecker/samples/` (o OMRChecker traz
 diversos samples com template e imagens reais).
 
 ## ResultsByQuestion_2.csv
@@ -82,5 +82,5 @@ curl -X POST http://localhost:8001/gradings/results-csv \
 
 ---
 
-Para mais exemplos, veja `samples/` no root do projeto (o OMRChecker traz
+Para mais exemplos, veja `back/omrchecker/samples/` (o OMRChecker traz
 diversos samples com template e imagens reais).

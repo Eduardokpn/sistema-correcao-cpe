@@ -306,7 +306,7 @@ tudo o que precisa sobreviver a um rebuild:
 ```
 
 > Versões anteriores montavam o volume em `/app/data`, por cima do pacote Python
-> `data` (modelos e migrações), o que fazia o container continuar usando a cópia
+> `data` (modelos e migrações; hoje ele se chama `db`), o que fazia o container continuar usando a cópia
 > antiga desse código depois de um `git pull`. O volume é o mesmo: o
 > `cpe_omr.db` existente aparece em `/var/lib/cpe/cpe_omr.db` sem migração
 > manual. Basta `docker compose up -d --build`.
