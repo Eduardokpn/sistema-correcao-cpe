@@ -7,6 +7,11 @@ output into the long-format contract and into database rows. Split into:
   logic ported out of the old webapp/pipeline.py so it is reusable off the UI.
 - ingest.py: turn a parsed results sheet + student/exam metadata into
   db.repositories writes.
+- sheets.py: the CPE answer-sheet templates (folha-cpe/) per exam size.
+- pipeline.py: runs the engine on uploaded files in a temporary folder.
+- bridge.py: what the API calls - picks the template, runs the pipeline and
+  returns the results frame, log and marked images.
+- artifacts.py: the files a grading leaves behind, stored per exam.
 """
 from grading.results import (
     ACERTO,

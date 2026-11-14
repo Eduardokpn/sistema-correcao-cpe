@@ -128,7 +128,7 @@ def test_synthetic_sheet_is_read_through_the_pipeline(question_count):
         {"Questão": labels, "Gabarito": [key[label] for label in labels]}
     )
     # Accent in the file name: cv2.imread used to return None for these on Windows
-    from api.grading_bridge import grade
+    from grading.bridge import grade
 
     graded = grade(
         [("Isabelli_Valença.png", _draw_sheet(template, marked))],
@@ -152,7 +152,7 @@ def test_synthetic_sheet_is_read_through_the_pipeline(question_count):
 
 
 def test_answer_key_outside_the_sheet_is_refused_before_grading():
-    from api.grading_bridge import grade_and_frame
+    from grading.bridge import grade_and_frame
 
     answer_key = pd.DataFrame({"Questão": ["q1", "q85"], "Gabarito": ["A", "B"]})
     with pytest.raises(SheetError, match="q85"):

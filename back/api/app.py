@@ -282,7 +282,7 @@ def _register_routes(app: FastAPI) -> None:
         import-time crash.
         """
         try:
-            from api.grading_bridge import grade
+            from grading.bridge import grade
         except Exception as error:  # pragma: no cover - env-dependent
             raise HTTPException(
                 status_code=503,

@@ -1,7 +1,7 @@
 """Bridge between the OMR pipeline and the ingest layer.
 
 Kept in its own module (imported lazily by the /gradings endpoint) so importing
-the API never pulls in OpenCV. It runs the same pipeline main.py uses and hands
+the API never pulls in OpenCV. It runs the pipeline in grading/pipeline.py and hands
 back the ResultsByQuestion frame the ingest layer consumes.
 """
 from __future__ import annotations
