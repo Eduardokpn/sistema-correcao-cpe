@@ -1,0 +1,4 @@
+# Scratch folders of the engine's CLI and tests
+inputs/*
+outputs/*
+!.gitignore

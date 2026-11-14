@@ -1,7 +1,7 @@
 """The CPE answer sheets: one template per exam size.
 
 The templates live in folha-cpe/ and are measured from the four L-shaped marks
-printed at the corners of the sheet (see src/processors/CropOnCornerMarks.py),
+printed at the corners of the sheet (see omrchecker/src/processors/CropOnCornerMarks.py),
 so the same template reads a scan regardless of how the scanner positioned,
 rotated or scaled the page. The 72-question exam is printed on the 90-question
 sheet and simply stops at q72.

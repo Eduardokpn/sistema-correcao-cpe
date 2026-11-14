@@ -5,8 +5,7 @@
 # ...and .streamlit, que carrega o tema da identidade visual
 !.streamlit/
 
-# Everything in inputs/ and outputs/
-inputs/*
+# Grading files of the local API (see grading/artifacts.py)
 outputs/*
 
 # Misc

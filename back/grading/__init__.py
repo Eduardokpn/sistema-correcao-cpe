@@ -1,6 +1,6 @@
 """Grading layer for the CPE OMR system.
 
-Wraps the OMR pipeline (src/entry.py) and translates its ResultsByQuestion.csv
+Wraps the OMR pipeline (omrchecker/src/entry.py) and translates its ResultsByQuestion.csv
 output into the long-format contract and into database rows. Split into:
 
 - results.py: parse ResultsByQuestion.csv (verdicts, scores, meta columns) - the

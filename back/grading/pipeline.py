@@ -4,7 +4,7 @@ Moved here from the old webapp/pipeline.py so the grading logic no longer lives
 under the retired Streamlit app. The CLI expects template.json, evaluation.json
 and the answer key to sit next to the sheet images, so every run builds its own
 temporary directory out of what was uploaded and then calls the same entry point
-that main.py uses.
+that omrchecker/main.py uses.
 
 Parsing of the resulting ResultsByQuestion sheet lives in grading/results.py and
 is imported here to avoid duplication.
@@ -12,19 +12,27 @@ is imported here to avoid duplication.
 import json
 import logging
 import shutil
+import sys
 import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import pandas as pd
 
-from src.constants.common import (
+# The engine is vendored unmodified in back/omrchecker/ and imports itself as
+# the top-level package `src`, so that folder has to be importable. This is the
+# only module of the app that imports the engine.
+_ENGINE_DIR = str(Path(__file__).resolve().parent.parent / "omrchecker")
+if _ENGINE_DIR not in sys.path:
+    sys.path.insert(0, _ENGINE_DIR)
+
+from src.constants.common import (  # noqa: E402
     CONFIG_FILENAME,
     EVALUATION_FILENAME,
     TEMPLATE_FILENAME,
 )
-from src.entry import entry_point
-from grading.results import (
+from src.entry import entry_point  # noqa: E402
+from grading.results import (  # noqa: E402
     QUESTION_COLUMN,
     SCORE_ROW,
     load_results_by_question,

@@ -38,7 +38,7 @@ from sqlalchemy.orm import (
     relationship,
 )
 
-# Verdicts as produced by src/evaluation.py and parsed by the grading layer.
+# Verdicts as produced by omrchecker/src/evaluation.py and parsed by the grading layer.
 # These three values are the single source of truth for the Answer.verdict
 # CHECK constraint (ck_answer_verdict_valid), enforced on both SQLite and
 # PostgreSQL - see the Answer model and migration 54aeeb1858ea.
