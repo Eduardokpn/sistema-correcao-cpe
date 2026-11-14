@@ -38,9 +38,9 @@ from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
 from api import schemas
-from data import repositories as repo
-from data.database import get_session_factory, init_db
-from data.repositories import LONG_FORMAT_COLUMNS
+from db import repositories as repo
+from db.database import get_session_factory, init_db
+from db.repositories import LONG_FORMAT_COLUMNS
 from grading import artifacts
 from grading.ingest import SheetMetadata, ingest_results_by_question
 from grading.results import blank_sheets, load_results_by_question

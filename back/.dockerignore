@@ -10,7 +10,6 @@ venv
 **/.DS_Store
 # Local database and grading outputs stay out of the image
 *.db
-data/*.db
 outputs
 # The engine's samples, docs and scratch folders are not needed at runtime
 omrchecker/samples

@@ -6,13 +6,13 @@ axis, with overall accuracy and a per-subject breakdown - the data behind the
 """
 from datetime import date
 
-from data.repositories import (
+from db.repositories import (
     AnswerInput,
     SheetInput,
     class_improvement_over_time,
     persist_graded_sheet,
 )
-from data.models import VERDICT_CORRECT, VERDICT_INCORRECT
+from db.models import VERDICT_CORRECT, VERDICT_INCORRECT
 
 
 def _sheet(student, exam, seq, applied, v1, v2):
@@ -41,7 +41,7 @@ def test_trend_ordered_over_two_exams(session):
     )
     session.commit()
 
-    from data.models import Class
+    from db.models import Class
 
     class_id = session.query(Class).filter_by(name="3A").one().id
     points = class_improvement_over_time(session, class_id)
@@ -61,7 +61,7 @@ def test_trend_has_per_subject_breakdown(session):
     )
     session.commit()
 
-    from data.models import Class
+    from db.models import Class
 
     class_id = session.query(Class).filter_by(name="3A").one().id
     points = class_improvement_over_time(session, class_id)
@@ -82,7 +82,7 @@ def test_trend_skips_exams_class_did_not_sit(session):
     persist_graded_sheet(session, other)
     session.commit()
 
-    from data.models import Class
+    from db.models import Class
 
     class_id = session.query(Class).filter_by(name="3A").one().id
     points = class_improvement_over_time(session, class_id)

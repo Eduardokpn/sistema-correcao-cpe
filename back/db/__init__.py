@@ -4,7 +4,7 @@ Holds the SQLAlchemy models, the engine/session factory and the repository layer
 that both the FastAPI service and CLI scripts import. Kept free of any OMR or web
 concern so it stays a plain, reusable persistence library.
 """
-from data.database import (
+from db.database import (
     get_engine,
     get_session,
     session_scope,
@@ -12,7 +12,7 @@ from data.database import (
     DATABASE_URL_ENV,
     DEFAULT_SQLITE_PATH,
 )
-from data.models import (
+from db.models import (
     Base,
     Class,
     Student,

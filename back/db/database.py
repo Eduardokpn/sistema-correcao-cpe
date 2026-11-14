@@ -17,7 +17,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from data.models import Base
+from db.models import Base
 
 DATABASE_URL_ENV = "CPE_DATABASE_URL"
 # Stored at back/cpe_omr.db by default

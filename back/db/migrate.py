@@ -1,4 +1,4 @@
-"""Bring the database to the current schema: `python -m data.migrate`.
+"""Bring the database to the current schema: `python -m db.migrate`.
 
 What the API container runs before starting (see docker-entrypoint.sh), so a
 fresh deploy gets its tables and an updated one gets the new migrations without
@@ -15,7 +15,7 @@ from alembic import command
 from alembic.config import Config
 from sqlalchemy import inspect, text
 
-from data.database import database_url, get_engine
+from db.database import database_url, get_engine
 
 BACK_DIR = Path(__file__).resolve().parent.parent
 VERSION_TABLE = "alembic_version"
@@ -34,7 +34,7 @@ def _needs_stamp(engine) -> bool:
 
 def migrate() -> None:
     config = Config(str(BACK_DIR / "alembic.ini"))
-    config.set_main_option("script_location", str(BACK_DIR / "data" / "migrations"))
+    config.set_main_option("script_location", str(BACK_DIR / "db" / "migrations"))
 
     engine = get_engine(url=database_url())
     try:

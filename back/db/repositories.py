@@ -25,7 +25,7 @@ import pandas as pd
 from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload
 
-from data.models import (
+from db.models import (
     Answer,
     Class,
     Exam,

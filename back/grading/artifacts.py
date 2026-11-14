@@ -92,7 +92,7 @@ def _number(text: str):
 def apply_answer_key(exam_id: int, new_answers: Dict[int, str]) -> bool:
     """Bring the stored ResultsByQuestion.csv in line with a changed gabarito.
 
-    Mirrors data.repositories.update_answer_key on the file: for each changed
+    Mirrors db.repositories.update_answer_key on the file: for each changed
     question the gabarito cell is replaced and every sheet's cell is re-judged
     from the mark it already holds; the score row moves by one per answer that
     became (or stopped being) correct. Returns False when there is no file.

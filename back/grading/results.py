@@ -17,7 +17,7 @@ import pandas as pd
 QUESTION_COLUMN = "question"
 SCORE_ROW = "score"
 
-# Dashboard-facing Resultado labels, kept identical to data.repositories
+# Dashboard-facing Resultado labels, kept identical to db.repositories
 ACERTO, ERRO, NAO_RESPONDEU = "Acerto", "Erro", "Não Respondeu"
 RESULT_ORDER = [ACERTO, ERRO, NAO_RESPONDEU]
 

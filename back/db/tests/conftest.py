@@ -6,7 +6,7 @@ the developer's real cpe_omr.db and tests stay isolated from one another.
 import pytest
 from sqlalchemy.orm import Session, sessionmaker
 
-from data.database import get_engine, init_db
+from db.database import get_engine, init_db
 
 
 @pytest.fixture

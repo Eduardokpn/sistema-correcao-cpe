@@ -2,7 +2,7 @@
 import pytest
 from sqlalchemy.orm import Session, sessionmaker
 
-from data.database import get_engine, init_db
+from db.database import get_engine, init_db
 
 
 @pytest.fixture

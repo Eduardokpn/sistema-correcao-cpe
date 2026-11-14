@@ -9,8 +9,8 @@ from datetime import date
 
 import pandas as pd
 
-from data.models import VERDICT_CORRECT, VERDICT_INCORRECT, VERDICT_UNMARKED, Answer, Question
-from data.repositories import (
+from db.models import VERDICT_CORRECT, VERDICT_INCORRECT, VERDICT_UNMARKED, Answer, Question
+from db.repositories import (
     ACERTO,
     ERRO,
     LONG_FORMAT_COLUMNS,
@@ -116,7 +116,7 @@ def test_filters_narrow_results(session):
     session.commit()
 
     # Subject filter keeps only Matemática answers
-    from data.models import Subject
+    from db.models import Subject
 
     matematica = session.query(Subject).filter_by(name="Matemática").one()
     rows = long_format_rows(session, subject_id=matematica.id)
@@ -145,8 +145,8 @@ def test_regrading_replaces_the_answer_key(session):
 
 
 def test_student_without_class_is_reused_when_the_class_arrives(session):
-    from data.models import Student
-    from data.repositories import get_or_create_class, get_or_create_student
+    from db.models import Student
+    from db.repositories import get_or_create_class, get_or_create_student
 
     first = get_or_create_student(session, "Ana Lima")
     turma = get_or_create_class(session, "3A")
@@ -160,8 +160,8 @@ def test_student_without_class_is_reused_when_the_class_arrives(session):
 
 
 def test_homonyms_in_different_classes_stay_apart(session):
-    from data.models import Student
-    from data.repositories import get_or_create_class, get_or_create_student
+    from db.models import Student
+    from db.repositories import get_or_create_class, get_or_create_student
 
     in_a = get_or_create_student(session, "João Silva", get_or_create_class(session, "3A"))
     in_b = get_or_create_student(session, "João Silva", get_or_create_class(session, "3B"))
@@ -174,8 +174,8 @@ def test_homonyms_in_different_classes_stay_apart(session):
 
 
 def test_delete_exam_keeps_students(session):
-    from data.models import Exam, Sheet, Student
-    from data.repositories import delete_exam
+    from db.models import Exam, Sheet, Student
+    from db.repositories import delete_exam
 
     sheet = persist_graded_sheet(session, _sheet_input("Aluno A", "E", VERDICT_CORRECT))
     session.commit()

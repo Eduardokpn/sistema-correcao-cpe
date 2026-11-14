@@ -6,7 +6,7 @@ output into the long-format contract and into database rows. Split into:
 - results.py: parse ResultsByQuestion.csv (verdicts, scores, meta columns) - the
   logic ported out of the old webapp/pipeline.py so it is reusable off the UI.
 - ingest.py: turn a parsed results sheet + student/exam metadata into
-  data.repositories writes.
+  db.repositories writes.
 """
 from grading.results import (
     ACERTO,

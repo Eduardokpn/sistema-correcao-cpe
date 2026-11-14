@@ -10,7 +10,7 @@ from datetime import date
 
 import pandas as pd
 
-from data.models import (
+from db.models import (
     Answer,
     Class,
     Exam,
@@ -23,7 +23,7 @@ from data.models import (
     VERDICT_INCORRECT,
     VERDICT_UNMARKED,
 )
-from data.repositories import long_format_dataframe
+from db.repositories import long_format_dataframe
 from grading.ingest import SheetMetadata, ingest_results_by_question, ingest_results_csv
 
 RESULTS_CSV = """question,Área,Subárea,Gabarito,giovanna_santos.png,pedro_alves.png

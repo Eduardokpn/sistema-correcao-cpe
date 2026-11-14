@@ -20,7 +20,7 @@ import requests
 DEFAULT_BASE_URL = "http://localhost:8001"
 API_URL_ENV = "CPE_API_URL"
 
-# Kept in sync with data.repositories.LONG_FORMAT_COLUMNS
+# Kept in sync with db.repositories.LONG_FORMAT_COLUMNS
 LONG_FORMAT_COLUMNS = [
     "Nome do Aluno",
     "Turma",

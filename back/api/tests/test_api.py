@@ -272,7 +272,7 @@ def test_changing_the_answer_key_regrades_the_exam(client):
 
 
 def test_changing_the_answer_key_moves_the_scores(client):
-    from data.models import Sheet
+    from db.models import Sheet
 
     exam_id = _ingest(client).json()["exam_id"]
     client.put(

@@ -167,7 +167,7 @@ Isso vai construir e iniciar:
 - Nginx como proxy reverso
 
 O container da API cria ou atualiza o banco sozinho ao iniciar
-(`python -m data.migrate`, o equivalente a `alembic upgrade head`); não é
+(`python -m db.migrate`, o equivalente a `alembic upgrade head`); não é
 preciso rodar migrações à mão. O dashboard só sobe depois que a API responde em
 `/health`.
 

@@ -4,7 +4,7 @@ from datetime import date
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from data.models import (
+from db.models import (
     Answer,
     Class,
     Exam,
