@@ -1,31 +1,22 @@
-"""Repository layer: persistence and reads for the CPE OMR data.
+"""Writes: everything that changes the database.
 
-Two responsibilities:
-
-1. Get-or-create helpers plus `persist_graded_sheet`, which the grading layer
-   (Task 3) uses to write a student's graded submission into the database.
-2. `long_format_rows` / `long_format_dataframe`, which reproduce the exact
-   long-format contract the dashboard charts consume:
-
-       Nome do Aluno, Turma, Área, Subárea, Número da questão, Questão,
-       Resposta do aluno, Resultado
-
-   so the API can return that shape and the charts keep working unchanged.
-
-Every function accepts a Session, so callers control the transaction. The
-queries use plain SQLAlchemy Core/ORM constructs to stay PostgreSQL-portable.
+Get-or-create helpers, `persist_graded_sheet` (what the grading layer calls to
+store a student's graded submission), changing an exam's gabarito and deleting
+an exam. Every function takes a Session and flushes; the caller commits.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import date
-from typing import Dict, Iterable, List, Optional
+from typing import Dict, List, Optional
 
-import pandas as pd
 from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload
 
 from db.models import (
+    VERDICT_CORRECT,
+    VERDICT_INCORRECT,
+    VERDICT_UNMARKED,
     Answer,
     Class,
     Exam,
@@ -34,35 +25,7 @@ from db.models import (
     Student,
     Subject,
     Subtopic,
-    VERDICT_CORRECT,
-    VERDICT_INCORRECT,
-    VERDICT_UNMARKED,
 )
-
-# Dashboard-facing Resultado labels (Portuguese), mapped from the stored verdict.
-ACERTO = "Acerto"
-ERRO = "Erro"
-NAO_RESPONDEU = "Não Respondeu"
-
-VERDICT_TO_RESULTADO = {
-    VERDICT_CORRECT: ACERTO,
-    VERDICT_INCORRECT: ERRO,
-    VERDICT_UNMARKED: NAO_RESPONDEU,
-}
-
-# The canonical long-format column order the charts expect
-LONG_FORMAT_COLUMNS = [
-    "Nome do Aluno",
-    "Turma",
-    "Área",
-    "Subárea",
-    "Número da questão",
-    "Questão",
-    "Resposta do aluno",
-    "Resultado",
-]
-
-NOT_INFORMED = "Não informado"
 
 
 # --------------------------------------------------------------------------- #
@@ -287,148 +250,8 @@ def persist_graded_sheet(session: Session, sheet_input: SheetInput) -> Sheet:
 
 
 # --------------------------------------------------------------------------- #
-# Reads
+# Changing an exam's answer key
 # --------------------------------------------------------------------------- #
-def _answers_query(
-    exam_id: Optional[int] = None,
-    class_id: Optional[int] = None,
-    student_id: Optional[int] = None,
-    subject_id: Optional[int] = None,
-):
-    """Answer query eager-loading every relationship the long format needs."""
-    stmt = (
-        select(Answer)
-        .join(Answer.sheet)
-        .join(Sheet.student)
-        .join(Answer.question)
-        .options(
-            joinedload(Answer.sheet).joinedload(Sheet.student).joinedload(
-                Student.school_class
-            ),
-            joinedload(Answer.sheet).joinedload(Sheet.exam),
-            joinedload(Answer.question).joinedload(Question.subject),
-            joinedload(Answer.question).joinedload(Question.subtopic),
-        )
-    )
-    if exam_id is not None:
-        stmt = stmt.where(Sheet.exam_id == exam_id)
-    if class_id is not None:
-        stmt = stmt.where(Student.class_id == class_id)
-    if student_id is not None:
-        stmt = stmt.where(Sheet.student_id == student_id)
-    if subject_id is not None:
-        stmt = stmt.where(Question.subject_id == subject_id)
-    return stmt
-
-
-def long_format_rows(
-    session: Session,
-    exam_id: Optional[int] = None,
-    class_id: Optional[int] = None,
-    student_id: Optional[int] = None,
-    subject_id: Optional[int] = None,
-) -> List[Dict[str, object]]:
-    """Return the long-format rows (one dict per answer) matching the chart contract."""
-    answers = session.scalars(
-        _answers_query(exam_id, class_id, student_id, subject_id)
-    ).unique().all()
-
-    rows: List[Dict[str, object]] = []
-    for answer in answers:
-        question = answer.question
-        student = answer.sheet.student
-        school_class = student.school_class
-        subject = question.subject
-        subtopic = question.subtopic
-        rows.append(
-            {
-                "Nome do Aluno": student.name,
-                "Turma": school_class.name if school_class else NOT_INFORMED,
-                "Área": subject.name if subject else None,
-                "Subárea": subtopic.name if subtopic else None,
-                "Número da questão": question.number,
-                "Questão": f"Q{question.number}",
-                "Resposta do aluno": answer.marked_answer or "-",
-                "Resultado": VERDICT_TO_RESULTADO.get(answer.verdict, NAO_RESPONDEU),
-                # Extra context columns, handy for the API but ignored by charts
-                "Turno": school_class.turno if school_class else None,
-                "Simulado": answer.sheet.exam.name,
-            }
-        )
-
-    rows.sort(key=lambda row: (row["Nome do Aluno"], row["Número da questão"]))
-    return rows
-
-
-def long_format_dataframe(session: Session, **filters) -> pd.DataFrame:
-    """Same rows as `long_format_rows`, as a DataFrame with the canonical columns."""
-    rows = long_format_rows(session, **filters)
-    frame = pd.DataFrame(rows)
-    if frame.empty:
-        return pd.DataFrame(columns=LONG_FORMAT_COLUMNS)
-    # Guarantee the canonical columns exist and lead, keeping any extras after
-    ordered = LONG_FORMAT_COLUMNS + [
-        column for column in frame.columns if column not in LONG_FORMAT_COLUMNS
-    ]
-    return frame[ordered]
-
-
-# --------------------------------------------------------------------------- #
-# Listing helpers (for the API to enumerate/lookup entities)
-# --------------------------------------------------------------------------- #
-def list_exams(session: Session) -> List[Exam]:
-    return list(
-        session.scalars(
-            select(Exam).order_by(Exam.sequence.is_(None), Exam.sequence, Exam.applied_on)
-        )
-    )
-
-
-def list_classes(session: Session) -> List[Class]:
-    return list(session.scalars(select(Class).order_by(Class.name)))
-
-
-def list_students(session: Session, class_id: Optional[int] = None) -> List[Student]:
-    stmt = select(Student).order_by(Student.name)
-    if class_id is not None:
-        stmt = stmt.where(Student.class_id == class_id)
-    return list(session.scalars(stmt))
-
-
-def list_subjects(session: Session) -> List[Subject]:
-    return list(session.scalars(select(Subject).order_by(Subject.name)))
-
-
-def get_exam(session: Session, exam_id: int) -> Optional[Exam]:
-    return session.get(Exam, exam_id)
-
-
-def delete_exam(session: Session, exam_id: int) -> bool:
-    """Delete an exam with its questions, sheets and answers.
-
-    Students and classes stay: they belong to the school, not to the exam.
-    Returns False when the exam does not exist.
-    """
-    exam = session.get(Exam, exam_id)
-    if exam is None:
-        return False
-    session.delete(exam)
-    session.flush()
-    return True
-
-
-def list_questions(session: Session, exam_id: int) -> List[Question]:
-    """The exam's questions in sheet order, with área/subárea loaded."""
-    return list(
-        session.scalars(
-            select(Question)
-            .where(Question.exam_id == exam_id)
-            .options(joinedload(Question.subject), joinedload(Question.subtopic))
-            .order_by(Question.number)
-        )
-    )
-
-
 class AnswerKeyError(ValueError):
     """The requested answer-key change cannot be applied."""
 
@@ -518,105 +341,18 @@ def update_answer_key(
     return summary
 
 
-def get_student(session: Session, student_id: int) -> Optional[Student]:
-    return session.get(Student, student_id)
-
-
 # --------------------------------------------------------------------------- #
-# Aggregations for the four teacher questions
+# Deleting
 # --------------------------------------------------------------------------- #
-@dataclass
-class PerformanceSummary:
-    """Verdict tally + accuracy for a slice of answers."""
+def delete_exam(session: Session, exam_id: int) -> bool:
+    """Delete an exam with its questions, sheets and answers.
 
-    total: int
-    acertos: int
-    erros: int
-    em_branco: int
-    taxa_acerto: float  # percentage 0..100
-
-    @classmethod
-    def from_rows(cls, rows: Iterable[Dict[str, object]]) -> "PerformanceSummary":
-        rows = list(rows)
-        total = len(rows)
-        acertos = sum(1 for row in rows if row["Resultado"] == ACERTO)
-        erros = sum(1 for row in rows if row["Resultado"] == ERRO)
-        em_branco = sum(1 for row in rows if row["Resultado"] == NAO_RESPONDEU)
-        taxa = round(acertos / total * 100, 1) if total else 0.0
-        return cls(total, acertos, erros, em_branco, taxa)
-
-
-def student_performance_in_subject(
-    session: Session, student_id: int, subject_id: int
-) -> PerformanceSummary:
-    """Q1: how a student did in a given subject (área), across all their sheets."""
-    rows = long_format_rows(session, student_id=student_id, subject_id=subject_id)
-    return PerformanceSummary.from_rows(rows)
-
-
-def student_performance_in_exam(
-    session: Session, student_id: int, exam_id: int
-) -> PerformanceSummary:
-    """Q2: how a student did in a given exam."""
-    rows = long_format_rows(session, student_id=student_id, exam_id=exam_id)
-    return PerformanceSummary.from_rows(rows)
-
-
-def class_performance_in_exam(
-    session: Session, class_id: int, exam_id: int
-) -> PerformanceSummary:
-    """Q3: how the whole class did in a given exam."""
-    rows = long_format_rows(session, class_id=class_id, exam_id=exam_id)
-    return PerformanceSummary.from_rows(rows)
-
-
-@dataclass
-class TrendPoint:
-    """One exam's accuracy for a class, with the time axis attached."""
-
-    exam_id: int
-    exam_name: str
-    applied_on: Optional[date]
-    sequence: Optional[int]
-    summary: PerformanceSummary
-    # Per-subject accuracy for this exam: {subject_name: taxa_acerto}
-    by_subject: Dict[str, float] = field(default_factory=dict)
-
-
-def class_improvement_over_time(
-    session: Session, class_id: int
-) -> List[TrendPoint]:
-    """Q4: is the class improving over time - overall and per subject.
-
-    One point per exam the class sat, ordered by the exam's time axis
-    (sequence then applied_on). Each point carries the overall accuracy and a
-    per-subject breakdown so the front-end can draw both.
+    Students and classes stay: they belong to the school, not to the exam.
+    Returns False when the exam does not exist.
     """
-    exams = list_exams(session)
-    subjects = list_subjects(session)
-
-    points: List[TrendPoint] = []
-    for exam in exams:
-        rows = long_format_rows(session, class_id=class_id, exam_id=exam.id)
-        if not rows:
-            # The class did not sit this exam - skip it from the trend
-            continue
-        summary = PerformanceSummary.from_rows(rows)
-        by_subject: Dict[str, float] = {}
-        for subject in subjects:
-            subject_rows = [row for row in rows if row["Área"] == subject.name]
-            if subject_rows:
-                by_subject[subject.name] = PerformanceSummary.from_rows(
-                    subject_rows
-                ).taxa_acerto
-        points.append(
-            TrendPoint(
-                exam_id=exam.id,
-                exam_name=exam.name,
-                applied_on=exam.applied_on,
-                sequence=exam.sequence,
-                summary=summary,
-                by_subject=by_subject,
-            )
-        )
-    return points
+    exam = session.get(Exam, exam_id)
+    if exam is None:
+        return False
+    session.delete(exam)
+    session.flush()
+    return True
