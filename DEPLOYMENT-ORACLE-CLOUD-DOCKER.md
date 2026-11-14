@@ -21,7 +21,7 @@ Use esta opção quando você quiser:
 A estrutura fica assim:
 
 - frontend público na raiz `/`
-- API pública em `/api/`
+- API acessível só pelo dashboard, dentro da rede do Docker (não é publicada)
 - banco em volume Docker persistente
 
 ---
@@ -204,8 +204,10 @@ docker compose logs -f dashboard
 
 ### API
 
+A API não é publicada no host, então o teste roda dentro do container:
+
 ```bash
-curl -i http://localhost:8001/health
+docker compose exec api python -c "import urllib.request; print(urllib.request.urlopen('http://127.0.0.1:8001/health').read().decode())"
 ```
 
 Resposta esperada:
@@ -223,14 +225,12 @@ curl -I http://localhost:8501/
 ### Acesso pela porta 80 via Nginx
 
 ```bash
-curl -i http://localhost/api/health
+curl -I http://localhost/
 ```
 
 Ou abra no navegador:
 
 - Dashboard: `http://IP_PUBLICO/`
-- API docs: `http://IP_PUBLICO/api/docs`
-- Health check: `http://IP_PUBLICO/api/health`
 
 ---
 
@@ -325,7 +325,7 @@ Se você quiser expor a aplicação com HTTPS, há duas opções boas:
 
 ### Opção B — Certbot no host, com Nginx externo
 
-Se preferir terminar TLS no host em vez do container, você pode instalar um Nginx no host e configurar proxy reverso para `localhost:8001` e `localhost:8501`.
+Se preferir terminar TLS no host em vez do container, você pode instalar um Nginx no host e configurar proxy reverso para `localhost:8501` (a API não é publicada no host).
 
 Mas para deploy simples e rápido em Oracle Cloud, a abordagem recomendada é:
 

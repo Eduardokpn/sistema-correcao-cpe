@@ -9,7 +9,7 @@ from datetime import date
 
 import pandas as pd
 
-from data.models import VERDICT_CORRECT, VERDICT_INCORRECT, VERDICT_UNMARKED, Answer
+from data.models import VERDICT_CORRECT, VERDICT_INCORRECT, VERDICT_UNMARKED, Answer, Question
 from data.repositories import (
     ACERTO,
     ERRO,
@@ -129,3 +129,63 @@ def test_empty_dataframe_has_canonical_columns(session):
     assert isinstance(frame, pd.DataFrame)
     assert list(frame.columns) == LONG_FORMAT_COLUMNS
     assert frame.empty
+
+
+def test_regrading_replaces_the_answer_key(session):
+    persist_graded_sheet(session, _sheet_input("Aluno A", "E", VERDICT_CORRECT))
+    corrected = _sheet_input("Aluno A", "E", VERDICT_INCORRECT)
+    corrected.answers[0].correct_answer = "D"
+    # A run that carries no key must not wipe the stored one
+    corrected.answers[1].correct_answer = None
+    persist_graded_sheet(session, corrected)
+    session.commit()
+
+    assert session.query(Question).filter_by(number=1).one().correct_answer == "D"
+    assert session.query(Question).filter_by(number=2).one().correct_answer == "B"
+
+
+def test_student_without_class_is_reused_when_the_class_arrives(session):
+    from data.models import Student
+    from data.repositories import get_or_create_class, get_or_create_student
+
+    first = get_or_create_student(session, "Ana Lima")
+    turma = get_or_create_class(session, "3A")
+    again = get_or_create_student(session, "Ana Lima", turma)
+
+    assert again.id == first.id
+    assert again.class_id == turma.id
+    # ...and a later upload without the turma finds the same student
+    assert get_or_create_student(session, "Ana Lima").id == first.id
+    assert session.query(Student).count() == 1
+
+
+def test_homonyms_in_different_classes_stay_apart(session):
+    from data.models import Student
+    from data.repositories import get_or_create_class, get_or_create_student
+
+    in_a = get_or_create_student(session, "João Silva", get_or_create_class(session, "3A"))
+    in_b = get_or_create_student(session, "João Silva", get_or_create_class(session, "3B"))
+    assert in_a.id != in_b.id
+
+    # With two candidates a class-less upload cannot pick one: it gets its own
+    alone = get_or_create_student(session, "João Silva")
+    assert alone.id not in (in_a.id, in_b.id)
+    assert session.query(Student).count() == 3
+
+
+def test_delete_exam_keeps_students(session):
+    from data.models import Exam, Sheet, Student
+    from data.repositories import delete_exam
+
+    sheet = persist_graded_sheet(session, _sheet_input("Aluno A", "E", VERDICT_CORRECT))
+    session.commit()
+
+    assert delete_exam(session, sheet.exam_id) is True
+    session.commit()
+
+    assert session.query(Exam).count() == 0
+    assert session.query(Question).count() == 0
+    assert session.query(Sheet).count() == 0
+    assert session.query(Answer).count() == 0
+    assert session.query(Student).count() == 1
+    assert delete_exam(session, 9999) is False

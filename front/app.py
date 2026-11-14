@@ -654,6 +654,8 @@ if SECAO == "correcao":
                     "puderam ser lidas. Confira no log se os 4 marcadores dos "
                     "cantos aparecem inteiros no scan (`Corner marks not found`)."
                 )
+            for warning in result.get("warnings") or []:
+                st.warning(warning)
             if result.get("log"):
                 with st.expander("Log da correção"):
                     st.code(result["log"])
@@ -676,6 +678,8 @@ if SECAO == "correcao":
                 st.session_state["last_exam_id"] = res["exam_id"]
                 st.session_state.pop("filtered_results", None)
                 st.success(f"{res['sheets_ingested']} prova(s) importada(s).")
+                for warning in res.get("warnings") or []:
+                    st.warning(warning)
             except APIError as error:
                 st.error(str(error))
 

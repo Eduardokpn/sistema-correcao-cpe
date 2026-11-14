@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import io
 import shutil
+import threading
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -37,7 +38,30 @@ def grade_and_frame(images, answer_key, **options) -> Tuple[pd.DataFrame, str]:
     return graded.results, graded.log
 
 
+# One grading at a time: the pipeline captures its log through the root logger
+# and was written to run alone, and the API calls `grade` from worker threads.
+_GRADING_LOCK = threading.Lock()
+
+
 def grade(
+    images: List[Tuple[str, bytes]],
+    answer_key: pd.DataFrame,
+    question_column: str = None,
+    answer_column: str = None,
+    question_count: int = None,
+) -> Graded:
+    """Grade `images` against `answer_key`, one run at a time. See `_grade`."""
+    with _GRADING_LOCK:
+        return _grade(
+            images,
+            answer_key,
+            question_column=question_column,
+            answer_column=answer_column,
+            question_count=question_count,
+        )
+
+
+def _grade(
     images: List[Tuple[str, bytes]],
     answer_key: pd.DataFrame,
     question_column: str = None,

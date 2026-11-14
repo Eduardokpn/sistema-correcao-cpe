@@ -21,6 +21,7 @@ from data.models import VERDICT_CORRECT, VERDICT_INCORRECT, VERDICT_UNMARKED
 from data.repositories import AnswerInput, SheetInput, persist_graded_sheet
 from grading.results import (
     ACERTO,
+    ANSWER_KEY_HINTS,
     ERRO,
     NAO_RESPONDEU,
     QUESTION_COLUMN,
@@ -42,7 +43,6 @@ RESULTADO_TO_VERDICT = {
 # Meta-column name hints, matched case-insensitively by substring
 AREA_HINTS = ("área", "area")
 SUBAREA_HINTS = ("subárea", "subarea", "sub-área", "sub-area", "sub área", "assunto")
-ANSWER_KEY_HINTS = ("gabarito", "answer", "resposta", "correta")
 
 
 @dataclass

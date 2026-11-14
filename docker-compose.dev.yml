@@ -4,6 +4,9 @@
 #   docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 services:
   api:
+    # Published only in development; the production stack keeps the API private
+    ports:
+      - "8001:8001"
     volumes:
       - ./back:/app
     command: ["uvicorn", "api.app:app", "--host", "0.0.0.0", "--port", "8001", "--reload"]

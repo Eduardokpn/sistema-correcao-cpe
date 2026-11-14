@@ -16,8 +16,10 @@ services:
       CPE_ARTIFACTS_DIR: /var/lib/cpe/gradings
       CPE_API_HOST: 0.0.0.0
       CPE_API_PORT: 8001
-    ports:
-      - "8001:8001"
+    # Not published on the host: only the dashboard talks to the API, over the
+    # compose network. docker-compose.dev.yml publishes it for development.
+    expose:
+      - "8001"
     volumes:
       - sqlite-data:/var/lib/cpe
     healthcheck:

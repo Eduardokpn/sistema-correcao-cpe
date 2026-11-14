@@ -4,6 +4,9 @@ Endpoints:
   GET  /health                         - liveness
   POST /exams                          - create/get an exam
   GET  /exams                          - list exams
+  DELETE /exams/{id}                   - delete an exam and its grading files
+  GET  /exams/{id}/answer-key          - the exam's stored gabarito
+  PUT  /exams/{id}/answer-key          - change the gabarito and regrade from stored marks
   GET  /classes                        - list classes
   GET  /students                       - list students (optional class filter)
   GET  /subjects                       - list subjects
@@ -30,6 +33,7 @@ from typing import List, Optional
 
 import pandas as pd
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Query, UploadFile
+from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
@@ -39,7 +43,7 @@ from data.database import get_session_factory, init_db
 from data.repositories import LONG_FORMAT_COLUMNS
 from grading import artifacts
 from grading.ingest import SheetMetadata, ingest_results_by_question
-from grading.results import load_results_by_question
+from grading.results import blank_sheets, load_results_by_question
 
 
 def get_db() -> Session:
@@ -104,6 +108,70 @@ def _register_routes(app: FastAPI) -> None:
             )
             for e in repo.list_exams(db)
         ]
+
+    @app.delete("/exams/{exam_id}", status_code=204)
+    def delete_exam(exam_id: int, db: Session = Depends(get_db)):
+        """Delete an exam: its questions, sheets, answers and grading files.
+
+        Students and classes are kept.
+        """
+        if not repo.delete_exam(db, exam_id):
+            raise HTTPException(status_code=404, detail="Simulado não encontrado.")
+        db.commit()
+        # The database is the source of truth; leftover files are harmless
+        artifacts.delete(exam_id)
+
+    @app.get(
+        "/exams/{exam_id}/answer-key",
+        response_model=List[schemas.AnswerKeyItemOut],
+    )
+    def exam_answer_key(exam_id: int, db: Session = Depends(get_db)):
+        """The exam's stored gabarito, one item per question in sheet order."""
+        if repo.get_exam(db, exam_id) is None:
+            raise HTTPException(status_code=404, detail="Simulado não encontrado.")
+        return [
+            schemas.AnswerKeyItemOut(
+                number=q.number,
+                correct_answer=q.correct_answer,
+                area=q.subject.name if q.subject else None,
+                subarea=q.subtopic.name if q.subtopic else None,
+            )
+            for q in repo.list_questions(db, exam_id)
+        ]
+
+    @app.put(
+        "/exams/{exam_id}/answer-key",
+        response_model=schemas.AnswerKeyUpdateOut,
+    )
+    def update_exam_answer_key(
+        exam_id: int,
+        changes: List[schemas.AnswerKeyChangeIn],
+        db: Session = Depends(get_db),
+    ):
+        """Change the gabarito of the listed questions and regrade the exam.
+
+        Verdicts and scores are recomputed from the marks already stored, so no
+        sheet has to be uploaded again. Questions left out keep their gabarito.
+        """
+        if repo.get_exam(db, exam_id) is None:
+            raise HTTPException(status_code=404, detail="Simulado não encontrado.")
+        new_answers = {c.number: c.correct_answer.strip() for c in changes}
+        try:
+            summary = repo.update_answer_key(db, exam_id, new_answers)
+        except repo.AnswerKeyError as error:
+            db.rollback()
+            raise HTTPException(status_code=422, detail=str(error))
+        db.commit()
+        # Best effort, like saving them: the database already has the change
+        try:
+            artifacts.apply_answer_key(exam_id, new_answers)
+        except (OSError, ValueError, IndexError):
+            pass
+        return schemas.AnswerKeyUpdateOut(
+            questions_changed=summary.questions_changed,
+            answers_regraded=summary.answers_regraded,
+            sheets_rescored=summary.sheets_rescored,
+        )
 
     # --------------------------------------------------------------- lookups
     @app.get("/classes", response_model=List[schemas.ClassOut])
@@ -182,11 +250,13 @@ def _register_routes(app: FastAPI) -> None:
 
         exam = repo.get_or_create_exam(db, exam_name)
         db.commit()
+        warnings = _blank_sheet_warnings(results)
         return schemas.GradingResultOut(
             exam_id=exam.id,
             exam_name=exam.name,
             sheets_ingested=len(sheets),
             students=[s.student.name for s in sheets],
+            warnings=warnings,
         )
 
     @app.post("/gradings", response_model=schemas.GradingResultOut)
@@ -241,8 +311,10 @@ def _register_routes(app: FastAPI) -> None:
                 detail=f"Planilha do gabarito inválida: {error}",
             )
         try:
-            graded = grade(
-                image_payload, answer_key_frame, question_count=question_count
+            # In a worker thread: grading a class takes minutes, and running it
+            # here would freeze every other request, the health check included
+            graded = await run_in_threadpool(
+                grade, image_payload, answer_key_frame, question_count=question_count
             )
         except Exception as error:
             raise HTTPException(status_code=422, detail=str(error))
@@ -271,6 +343,7 @@ def _register_routes(app: FastAPI) -> None:
             sheets_ingested=len(sheets),
             students=[s.student.name for s in sheets],
             log=graded.log,
+            warnings=_blank_sheet_warnings(graded.results),
         )
 
     # ------------------------------------------------------- grading files
@@ -342,6 +415,15 @@ def _performance_out(summary: repo.PerformanceSummary) -> schemas.PerformanceOut
         em_branco=summary.em_branco,
         taxa_acerto=summary.taxa_acerto,
     )
+
+
+def _blank_sheet_warnings(results: pd.DataFrame) -> List[str]:
+    """One message per sheet read without a single mark (saved all the same)."""
+    return [
+        f"{sheet}: nenhuma marcação lida. A folha foi salva como em branco; "
+        "confira o scan e corrija de novo se o aluno respondeu."
+        for sheet in blank_sheets(results)
+    ]
 
 
 def _parse_json_map(value: Optional[str]) -> Optional[dict]:

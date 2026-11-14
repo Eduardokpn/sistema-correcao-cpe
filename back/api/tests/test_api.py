@@ -221,3 +221,150 @@ def test_image_grading_stores_its_files(client):
     assert client.get(f"/exams/{exam_id}/marked-sheets").json() == ["aluna.png"]
     assert client.get(f"/exams/{exam_id}/marked-sheets/aluna.png").content[:4] == b"\x89PNG"
     assert "aluna.png" in client.get(f"/exams/{exam_id}/results-by-question.csv").text
+
+
+def test_answer_key_endpoint(client):
+    exam_id = _ingest(client).json()["exam_id"]
+
+    response = client.get(f"/exams/{exam_id}/answer-key")
+    assert response.status_code == 200
+    assert response.json() == [
+        {"number": 1, "correct_answer": "E", "area": "Matemática", "subarea": "Álgebra"},
+        {"number": 2, "correct_answer": "B", "area": "Linguagem e Códigos", "subarea": "Português"},
+        {"number": 3, "correct_answer": "A", "area": "Matemática", "subarea": "Geometria"},
+    ]
+
+    assert client.get("/exams/9999/answer-key").status_code == 404
+
+
+def test_changing_the_answer_key_regrades_the_exam(client):
+    exam_id = _ingest(client).json()["exam_id"]
+
+    # q1: Giovanna marked E (was right), Pedro marked C (was wrong)
+    response = client.put(
+        f"/exams/{exam_id}/answer-key",
+        json=[{"number": 1, "correct_answer": "C"}, {"number": 2, "correct_answer": "B"}],
+    )
+    assert response.status_code == 200
+    assert response.json() == {
+        "questions_changed": 1,
+        "answers_regraded": 2,
+        "sheets_rescored": 2,
+    }
+
+    key = client.get(f"/exams/{exam_id}/answer-key").json()
+    assert [item["correct_answer"] for item in key] == ["C", "B", "A"]
+
+    rows = client.get("/results", params={"exam_id": exam_id}).json()["rows"]
+    q1 = {
+        row["Nome do Aluno"]: row["Resultado"]
+        for row in rows
+        if row["Número da questão"] == 1
+    }
+    assert q1 == {"Giovanna": "Erro", "Pedro": "Acerto"}
+    # Blank answers stay blank whatever the key says
+    q2 = {
+        row["Nome do Aluno"]: row["Resultado"]
+        for row in rows
+        if row["Número da questão"] == 2
+    }
+    assert q2["Pedro"] == "Não Respondeu"
+
+
+def test_changing_the_answer_key_moves_the_scores(client):
+    from data.models import Sheet
+
+    exam_id = _ingest(client).json()["exam_id"]
+    client.put(
+        f"/exams/{exam_id}/answer-key", json=[{"number": 1, "correct_answer": "C"}]
+    )
+
+    with client.session_factory() as session:
+        scores = sorted(sheet.score for sheet in session.query(Sheet).all())
+    # Giovanna 2.0 -> 1.0, Pedro 1.0 -> 2.0
+    assert scores == [1.0, 2.0]
+
+
+def test_answer_key_change_is_rejected_whole(client):
+    exam_id = _ingest(client).json()["exam_id"]
+
+    for changes in (
+        [{"number": 1, "correct_answer": "C"}, {"number": 99, "correct_answer": "A"}],
+        [{"number": 1, "correct_answer": "C"}, {"number": 2, "correct_answer": " "}],
+        [{"number": 1, "correct_answer": "['A', 'B']"}],
+    ):
+        response = client.put(f"/exams/{exam_id}/answer-key", json=changes)
+        assert response.status_code == 422
+
+    key = client.get(f"/exams/{exam_id}/answer-key").json()
+    assert [item["correct_answer"] for item in key] == ["E", "B", "A"]
+    assert (
+        client.put("/exams/9999/answer-key", json=[]).status_code == 404
+    )
+
+
+def test_blank_sheet_is_saved_with_a_warning(client):
+    csv_text = (
+        "question,Gabarito,lida.png,nao_lida.png\n"
+        "score,,1.0,0.0\n"
+        "q1,E,correct-E,unmarked\n"
+        "q2,B,incorrect-A,unmarked\n"
+    )
+    response = client.post(
+        "/gradings/results-csv",
+        data={"exam_name": "Simulado 1"},
+        files={"results_csv": ("r.csv", io.BytesIO(csv_text.encode()), "text/csv")},
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["sheets_ingested"] == 2
+    assert len(body["warnings"]) == 1
+    assert body["warnings"][0].startswith("nao_lida.png")
+
+    assert _ingest(client, exam_name="Simulado 2").json()["warnings"] == []
+
+
+def test_delete_exam_endpoint(client):
+    from grading import artifacts
+
+    exam_id = _ingest(client).json()["exam_id"]
+    artifacts.save(exam_id, RESULTS_CSV, {"a.png": b"\x89PNG fake"})
+
+    assert client.delete(f"/exams/{exam_id}").status_code == 204
+
+    assert client.get("/exams").json() == []
+    assert client.get(f"/exams/{exam_id}/answer-key").status_code == 404
+    assert client.get(f"/exams/{exam_id}/marked-sheets").json() == []
+    assert client.get(f"/exams/{exam_id}/results-by-question.csv").status_code == 404
+    assert client.get("/results").json()["rows"] == []
+    # The students are the school's, not the exam's
+    assert len(client.get("/students").json()) == 2
+    assert client.delete(f"/exams/{exam_id}").status_code == 404
+
+
+def test_answer_key_change_reaches_the_stored_csv(client):
+    from grading import artifacts
+
+    exam_id = _ingest(client).json()["exam_id"]
+    stored = (
+        '"question","Área","Subárea","Gabarito","giovanna.png","pedro.png"\n'
+        '"score","","","",2.0,1.0\n'
+        '"q1","Matemática","Álgebra","E","correct-E","incorrect-C"\n'
+        '"q2","Linguagem e Códigos","Português","B","correct-B","unmarked"\n'
+        '"q3","Matemática","Geometria","A","","correct-A"\n'
+    )
+    artifacts.save(exam_id, stored, {})
+
+    client.put(
+        f"/exams/{exam_id}/answer-key",
+        json=[{"number": 1, "correct_answer": "C"}, {"number": 3, "correct_answer": "D"}],
+    )
+
+    text = client.get(f"/exams/{exam_id}/results-by-question.csv").text
+    assert text == (
+        '"question","Área","Subárea","Gabarito","giovanna.png","pedro.png"\n'
+        '"score","","","",1.0,1.0\n'
+        '"q1","Matemática","Álgebra","C","incorrect-E","correct-C"\n'
+        '"q2","Linguagem e Códigos","Português","B","correct-B","unmarked"\n'
+        '"q3","Matemática","Geometria","D","","incorrect-A"\n'
+    )

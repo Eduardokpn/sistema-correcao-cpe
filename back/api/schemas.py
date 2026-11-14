@@ -42,6 +42,28 @@ class ExamOut(BaseModel):
     sequence: Optional[int] = None
 
 
+class AnswerKeyItemOut(BaseModel):
+    """One question of an exam's gabarito."""
+
+    number: int
+    correct_answer: Optional[str] = None
+    area: Optional[str] = None
+    subarea: Optional[str] = None
+
+
+class AnswerKeyChangeIn(BaseModel):
+    """A new gabarito for one question."""
+
+    number: int
+    correct_answer: str
+
+
+class AnswerKeyUpdateOut(BaseModel):
+    questions_changed: int
+    answers_regraded: int
+    sheets_rescored: int
+
+
 class LongFormatRow(BaseModel):
     """One row of the dashboard long format. Aliased to the Portuguese columns."""
 
@@ -96,3 +118,5 @@ class GradingResultOut(BaseModel):
     sheets_ingested: int
     students: List[str]
     log: Optional[str] = None
+    # Things the teacher should check, e.g. a sheet read with no marks at all
+    warnings: List[str] = []

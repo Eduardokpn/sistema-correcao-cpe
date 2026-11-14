@@ -89,6 +89,36 @@ class CPEClient:
     def exams(self) -> List[dict]:
         return self._get("/exams")
 
+    def delete_exam(self, exam_id: int) -> None:
+        """Delete an exam with its results and grading files."""
+        try:
+            response = requests.delete(
+                f"{self.base_url}/exams/{exam_id}", timeout=self.timeout
+            )
+        except requests.RequestException as error:
+            raise APIError(f"Não foi possível contatar a API: {error}") from error
+        if response.status_code != 204:
+            self._json(response)
+
+    def answer_key(self, exam_id: int) -> List[dict]:
+        """The exam's stored gabarito: number, correct_answer, area, subarea."""
+        return self._get(f"/exams/{exam_id}/answer-key")
+
+    def update_answer_key(self, exam_id: int, changes: List[dict]) -> dict:
+        """Change the gabarito of some questions and regrade the exam.
+
+        `changes` is a list of {"number": 36, "correct_answer": "D"}.
+        """
+        try:
+            response = requests.put(
+                f"{self.base_url}/exams/{exam_id}/answer-key",
+                json=changes,
+                timeout=self.timeout,
+            )
+        except requests.RequestException as error:
+            raise APIError(f"Não foi possível contatar a API: {error}") from error
+        return self._json(response)
+
     def classes(self) -> List[dict]:
         return self._get("/classes")
 

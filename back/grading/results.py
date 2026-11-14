@@ -21,6 +21,9 @@ SCORE_ROW = "score"
 ACERTO, ERRO, NAO_RESPONDEU = "Acerto", "Erro", "Não Respondeu"
 RESULT_ORDER = [ACERTO, ERRO, NAO_RESPONDEU]
 
+# Name hints for the answer-key column, matched case-insensitively by substring
+ANSWER_KEY_HINTS = ("gabarito", "answer", "resposta", "correta")
+
 
 def load_results_by_question(path_or_buffer):
     """Read a ResultsByQuestion csv into a DataFrame of strings."""
@@ -108,3 +111,20 @@ def question_number(question_label):
     """Extract the trailing integer from a question label like 'q12' -> 12."""
     digits = re.findall(r"\d+", str(question_label))
     return int(digits[-1]) if digits else None
+
+
+def blank_sheets(results_by_question):
+    """Sheet columns where not a single mark was read.
+
+    A whole exam left blank is rare; a scan the pipeline could not read looks
+    exactly like one, so callers warn about these instead of trusting them.
+    """
+    scores, results = split_scores(results_by_question)
+    if results.empty:
+        return []
+    columns = student_columns(results, guess_meta_columns(results, scores))
+    return [
+        column
+        for column in columns
+        if all(parse_verdict(cell)[0] == NAO_RESPONDEU for cell in results[column])
+    ]
