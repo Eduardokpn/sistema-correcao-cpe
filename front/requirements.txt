@@ -4,3 +4,5 @@ streamlit>=1.49.0
 pandas>=2.0.2
 plotly>=5.20.0
 requests>=2.31.0
+# Lets the app preview .xlsx gabaritos before sending them to the API
+openpyxl>=3.1.0

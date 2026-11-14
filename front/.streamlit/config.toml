@@ -3,7 +3,7 @@
 # Paleta da marca: #11385c (azul escuro) · #ef7b17 (laranja) · #3676bb (azul) ·
 # #72a4d6 (azul claro) · #f6f6f6 (off-white).
 #
-# Os passos usados nos graficos ficam em webapp/dashboard.py - sao versoes
+# Os passos usados nos graficos ficam em charts.py - sao versoes
 # ajustadas destes valores para passar nos testes de contraste e daltonismo
 # contra as superficies definidas aqui.
 

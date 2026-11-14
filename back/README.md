@@ -227,9 +227,12 @@ Banco: sem `CPE_DATABASE_URL`, usa um SQLite local (`cpe_omr.db`). Para PostgreS
 aponte a variável para uma URL `postgresql+psycopg://...` antes de rodar Alembic e
 uvicorn - nenhuma mudança de código é necessária.
 
-Correção por imagem (`POST /gradings`): o pipeline lê `template.json` (e
-`config.json`, se existir) de `inputs/`, já que a folha de resposta é sempre a
-mesma; para trocar de folha, basta substituir o arquivo lá. Se as provas já foram
+Correção por imagem (`POST /gradings`): o campo `question_count` (72, 80 ou 90)
+escolhe o template da folha CPE em `folha-cpe/` (`template_N.json` +
+`config.json`), alinhado pelos marcadores dos cantos; sem ele, vale a folha de
+80. O `ResultsByQuestion.csv` bruto e as folhas com a leitura marcada ficam em
+`CPE_ARTIFACTS_DIR` (padrão `outputs/gradings/<exam_id>/`) e são servidos em
+`GET /exams/{id}/results-by-question.csv` e `GET /exams/{id}/marked-sheets`. Se as provas já foram
 corrigidas, `POST /gradings/results-csv` importa uma planilha `ResultsByQuestion`
 direto para o banco.
 

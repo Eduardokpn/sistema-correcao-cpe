@@ -11,7 +11,9 @@ from src.logger import logger
 
 def load_json(path, **rest):
     try:
-        with open(path, "r") as f:
+        # utf-8-sig: sem encoding explícito o Windows usaria cp1252 e quebraria em
+        # qualquer acento; o -sig ainda absorve o BOM que o Bloco de Notas escreve
+        with open(path, "r", encoding="utf-8-sig") as f:
             loaded = json.load(f, **rest)
     except json.decoder.JSONDecodeError as error:
         logger.critical(f"Error when loading json file at: '{path}'\n{error}")
@@ -91,6 +93,7 @@ def setup_outputs_for_template(paths, template):
             )
         else:
             logger.info(f"Present : appending to '{file_name}'")
-            ns.files_obj[file_key] = open(file_name, "a")
+            # utf-8 para casar com o que o to_csv acima escreve
+            ns.files_obj[file_key] = open(file_name, "a", encoding="utf-8")
 
     return ns

@@ -36,6 +36,17 @@ ERODE_RECT_COLOR = (50, 50, 50)
 NORMAL_RECT_COLOR = (155, 155, 155)
 EROSION_PARAMS = {"kernel_size": (5, 5), "iterations": 5}
 
+# CropOnCornerMarks constants
+# Fraction of the page width/height searched for a mark at each corner
+DEFAULT_CORNER_SEARCH_REGION = 0.2
+# Mark side as a fraction of the page width
+DEFAULT_CORNER_MARK_SIZE_RANGE = (0.008, 0.04)
+# An L shape leaves part of its convex hull empty, a filled bubble does not
+CORNER_MARK_SOLIDITY_RANGE = (0.6, 0.94)
+CORNER_MARK_MAX_ASPECT_RATIO = 1.6
+# Opposite sides of the marks' quadrilateral may differ by this fraction at most
+CORNER_MARK_MAX_SIDE_MISMATCH = 0.1
+
 # FeatureBasedAlignment constants
 DEFAULT_MAX_FEATURES = 500
 DEFAULT_GOOD_MATCH_PERCENT = 0.15

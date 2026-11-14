@@ -1,3 +1,6 @@
+# Production-style stack: each image carries its own code, and the only thing
+# kept outside the containers is the sqlite-data volume.
+# For development with live code reload, see docker-compose.dev.yml.
 services:
   api:
     build:
@@ -5,14 +8,25 @@ services:
       dockerfile: Dockerfile
     container_name: cpe-api
     environment:
-      CPE_DATABASE_URL: sqlite:///data/cpe_omr.db
+      # Everything that must survive a rebuild lives in /var/lib/cpe (the
+      # sqlite-data volume): the database and the files of each grading.
+      # It used to be mounted at /app/data, on top of the `data` Python package,
+      # which froze that package at whatever the image had on first run.
+      CPE_DATABASE_URL: sqlite:////var/lib/cpe/cpe_omr.db
+      CPE_ARTIFACTS_DIR: /var/lib/cpe/gradings
       CPE_API_HOST: 0.0.0.0
       CPE_API_PORT: 8001
     ports:
       - "8001:8001"
     volumes:
-      - ./back:/app:rw
-      - sqlite-data:/app/data
+      - sqlite-data:/var/lib/cpe
+    healthcheck:
+      # The image has no curl; Python is always there
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
     restart: unless-stopped
 
   dashboard:
@@ -23,11 +37,10 @@ services:
     environment:
       CPE_API_URL: http://api:8001
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     ports:
       - "8501:8501"
-    volumes:
-      - ./front:/app:rw
     restart: unless-stopped
 
   nginx:

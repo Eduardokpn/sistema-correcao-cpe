@@ -1,0 +1,66 @@
+{
+  "pageDimensions": [ 1000, 1415 ],
+  "bubbleDimensions": [ 18, 18 ],
+  "customLabels": {},
+  "preProcessors": [
+    { "name": "CropOnCornerMarks", "options": {} }
+  ],
+  "fieldBlocks": {
+    "MCQBlock1": {
+      "fieldType": "QTYPE_MCQ5",
+      "origin": [ 423, 235 ],
+      "fieldLabels": ["q31..40"],
+      "bubblesGap": 45.07,
+      "labelsGap": 26.63
+    },
+    "MCQBlock2": {
+      "fieldType": "QTYPE_MCQ5",
+      "origin": [ 761, 235 ],
+      "fieldLabels": ["q71..80"],
+      "bubblesGap": 45.07,
+      "labelsGap": 26.63
+    },
+    "MCQBlock3": {
+      "fieldType": "QTYPE_MCQ5",
+      "origin": [ 86, 517 ],
+      "fieldLabels": ["q1..10"],
+      "bubblesGap": 45.07,
+      "labelsGap": 26.63
+    },
+    "MCQBlock4": {
+      "fieldType": "QTYPE_MCQ5",
+      "origin": [ 423, 517 ],
+      "fieldLabels": ["q41..50"],
+      "bubblesGap": 45.07,
+      "labelsGap": 26.63
+    },
+    "MCQBlock5": {
+      "fieldType": "QTYPE_MCQ5",
+      "origin": [ 86, 800 ],
+      "fieldLabels": ["q11..20"],
+      "bubblesGap": 45.07,
+      "labelsGap": 26.63
+    },
+    "MCQBlock6": {
+      "fieldType": "QTYPE_MCQ5",
+      "origin": [ 423, 800 ],
+      "fieldLabels": ["q51..60"],
+      "bubblesGap": 45.07,
+      "labelsGap": 26.63
+    },
+    "MCQBlock7": {
+      "fieldType": "QTYPE_MCQ5",
+      "origin": [ 87, 1082 ],
+      "fieldLabels": ["q21..30"],
+      "bubblesGap": 45.07,
+      "labelsGap": 26.63
+    },
+    "MCQBlock8": {
+      "fieldType": "QTYPE_MCQ5",
+      "origin": [ 424, 1082 ],
+      "fieldLabels": ["q61..70"],
+      "bubblesGap": 45.07,
+      "labelsGap": 26.63
+    }
+  }
+}

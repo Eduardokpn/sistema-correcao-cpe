@@ -6,6 +6,8 @@
  Github: https://github.com/Udayraj123
 
 """
+from pathlib import Path
+
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
@@ -19,10 +21,34 @@ CLAHE_HELPER = cv2.createCLAHE(clipLimit=5.0, tileGridSize=(8, 8))
 class ImageUtils:
     """A Static-only Class to hold common image processing utilities & wrappers over OpenCV functions"""
 
+    # cv2.imread/imwrite passam o caminho para a API ANSI do Windows, então um
+    # acento no nome do arquivo ('Isabelli_Valença.jpg') faz a leitura devolver
+    # None e a escrita virar no-op. Lendo/escrevendo os bytes por fora e
+    # deixando o OpenCV só decodificar, o nome deixa de importar.
+    @staticmethod
+    def read_img(path, flag=cv2.IMREAD_GRAYSCALE):
+        try:
+            buffer = np.fromfile(str(path), dtype=np.uint8)
+        except OSError as error:
+            logger.error(f"Could not read image '{path}': {error}")
+            return None
+        if buffer.size == 0:
+            logger.error(f"Could not read image '{path}': empty file")
+            return None
+        image = cv2.imdecode(buffer, flag)
+        if image is None:
+            logger.error(f"Could not decode image '{path}': unsupported or corrupt")
+        return image
+
     @staticmethod
     def save_img(path, final_marked):
         logger.info(f"Saving Image to '{path}'")
-        cv2.imwrite(path, final_marked)
+        extension = Path(str(path)).suffix or ".jpg"
+        is_encoded, buffer = cv2.imencode(extension, final_marked)
+        if not is_encoded:
+            logger.error(f"Could not encode image for '{path}'")
+            return
+        buffer.tofile(str(path))
 
     @staticmethod
     def resize_util(img, u_width, u_height=None):

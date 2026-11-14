@@ -166,6 +166,14 @@ Isso vai construir e iniciar:
 - dashboard Streamlit
 - Nginx como proxy reverso
 
+O container da API cria ou atualiza o banco sozinho ao iniciar
+(`python -m data.migrate`, o equivalente a `alembic upgrade head`); não é
+preciso rodar migrações à mão. O dashboard só sobe depois que a API responde em
+`/health`.
+
+Cada imagem carrega o próprio código: depois de um `git pull`, é o `--build` que
+leva o código novo para os containers.
+
 Verifique os containers:
 
 ```bash
@@ -234,7 +242,9 @@ Os arquivos relevantes já foram criados para a abordagem Docker:
 - [nginx.conf](nginx.conf)
 - [back/Dockerfile](back/Dockerfile)
 - [front/Dockerfile](front/Dockerfile)
-- [.dockerignore](.dockerignore)
+- [back/.dockerignore](back/.dockerignore) e [front/.dockerignore](front/.dockerignore)
+- [back/docker-entrypoint.sh](back/docker-entrypoint.sh) — roda as migrações do banco antes de subir a API
+- [docker-compose.dev.yml](docker-compose.dev.yml) — só para desenvolvimento (código montado do checkout, com reload)
 
 Esses arquivos já deixam o projeto pronto para rodar em Docker sem depender de `systemd`.
 
@@ -287,13 +297,19 @@ volumes:
 
 Isso garante que o banco continue existindo mesmo quando o container é recriado.
 
-O banco do backend fica em:
+O volume `sqlite-data` é montado em `/var/lib/cpe` dentro do container e guarda
+tudo o que precisa sobreviver a um rebuild:
 
 ```text
-/app/data/cpe_omr.db
+/var/lib/cpe/cpe_omr.db      # banco (CPE_DATABASE_URL)
+/var/lib/cpe/gradings/       # ResultsByQuestion.csv e folhas marcadas de cada simulado (CPE_ARTIFACTS_DIR)
 ```
 
-Dentro do container; esse caminho é mapeado para o volume `sqlite-data`.
+> Versões anteriores montavam o volume em `/app/data`, por cima do pacote Python
+> `data` (modelos e migrações), o que fazia o container continuar usando a cópia
+> antiga desse código depois de um `git pull`. O volume é o mesmo: o
+> `cpe_omr.db` existente aparece em `/var/lib/cpe/cpe_omr.db` sem migração
+> manual. Basta `docker compose up -d --build`.
 
 ---
 

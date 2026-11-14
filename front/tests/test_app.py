@@ -2,7 +2,7 @@
 
 Runs the app end-to-end in-process (no server, no network) by swapping the real
 CPEClient for a fake that serves a canned long-format payload, then asserts the
-dashboard renders the four charts and the filters without error.
+sidebar sections render their charts and filters without error.
 """
 import sys
 from pathlib import Path
@@ -60,6 +60,15 @@ class FakeClient:
     def classes(self):
         return [{"id": 1, "name": "3A", "turno": "vespertino"}]
 
+    def results_by_question_csv(self, exam_id):
+        return b"question,giovanna.png\nq1,correct-E\n"
+
+    def marked_sheets(self, exam_id):
+        return ["giovanna.png"]
+
+    def marked_sheet(self, exam_id, file_name):
+        return None
+
     def class_trend(self, class_id):
         return {
             "class_id": class_id,
@@ -106,30 +115,94 @@ def _clear_streamlit_caches():
         pass
 
 
+def _run(section=None):
+    """Run the app on one sidebar section (the menu renders one at a time)."""
+    at = AppTest.from_file(APP_PATH, default_timeout=30)
+    if section:
+        at.session_state["secao"] = section
+    return at.run()
+
+
 @pytest.fixture
 def app():
     # Patch the class so the app's cached get_client() builds our fake
     _clear_streamlit_caches()
     with patch("api_client.CPEClient", FakeClient):
-        at = AppTest.from_file(APP_PATH, default_timeout=30)
-        at.run()
-        yield at
+        yield _run()
+
+
+@pytest.fixture
+def section():
+    """Factory: section("dashboard") -> the app run on that section."""
+    _clear_streamlit_caches()
+    with patch("api_client.CPEClient", FakeClient):
+        yield _run
 
 
 def test_app_runs_without_exception(app):
     assert not app.exception
 
 
-def test_dashboard_renders_four_charts(app):
-    # Move to the dashboard tab context: AppTest runs every tab body, so the
-    # plotly charts from the dashboard are already in the element tree.
-    # Four st.plotly_chart calls -> four figures rendered.
-    # (KPIs + charts only appear when the fake returns rows, which it does.)
-    subheaders = [h.value for h in app.subheader]
-    assert "1. Desempenho por área" in subheaders
-    assert "2. Desempenho por subárea" in subheaders
-    assert "3. Taxa de acerto por questão" in subheaders
-    assert "4. Desempenho por aluno" in subheaders
+def test_every_section_runs_without_exception(section):
+    for slug in ("correcao", "dashboard", "evolucao", "dados"):
+        assert not section(slug).exception, slug
+
+
+def test_sidebar_menu_switches_section(app):
+    # Opens on Correção, with the exam-size choice (72 / 80 / 90, default 80)
+    assert "Tamanho da prova" in [h.value for h in app.subheader]
+    size = next(r for r in app.radio if r.label == "Quantidade de questões")
+    assert list(size.options) == ["72 questões", "80 questões", "90 questões"]
+    assert size.value == 80
+
+    app.sidebar.button(key="nav_dashboard").click().run()
+    assert not app.exception
+    assert "2. Taxa de acerto por questão" in [h.value for h in app.subheader]
+
+
+def test_dashboard_renders_charts(section):
+    # Área and subárea share one section (switched by a radio), so three
+    # numbered sections instead of the old four.
+    at = section("dashboard")
+    subheaders = [h.value for h in at.subheader]
+    assert "1. Desempenho por área e subárea" in subheaders
+    assert "2. Taxa de acerto por questão" in subheaders
+    assert "3. Desempenho por aluno" in subheaders
+    assert any(r.label == "Agrupar por" for r in at.radio)
+
+
+def test_dashboard_without_area_columns_skips_that_section(section):
+    blank = [dict(row, **{"Área": None, "Subárea": None}) for row in ROWS]
+    with patch.object(
+        FakeClient,
+        "long_format_dataframe",
+        lambda self, **filters: pd.DataFrame(blank)[LONG_FORMAT_COLUMNS],
+    ):
+        at = section("dashboard")
+    assert not at.exception
+    subheaders = [h.value for h in at.subheader]
+    assert "1. Taxa de acerto por questão" in subheaders
+    assert "2. Desempenho por aluno" in subheaders
+
+
+def test_dados_falls_back_to_last_exam_without_dashboard_filters(section):
+    at = section("dados")
+    assert "Resumo por aluno" in [h.value for h in at.subheader]
+
+
+def test_dados_offers_the_grading_files(section):
+    at = section("dados")
+    assert not at.exception
+    assert "Folhas com a leitura marcada" in [h.value for h in at.subheader]
+    assert any(t.label == "Mostrar as folhas" for t in at.toggle)
+
+
+def test_dados_without_grading_files_hides_them(section):
+    with patch.object(FakeClient, "results_by_question_csv", lambda self, exam_id: None), \
+         patch.object(FakeClient, "marked_sheets", lambda self, exam_id: []):
+        at = section("dados")
+    assert not at.exception
+    assert "Folhas com a leitura marcada" not in [h.value for h in at.subheader]
 
 
 def test_no_health_error_shown(app):
@@ -137,9 +210,9 @@ def test_no_health_error_shown(app):
     assert not any("não consegui falar com a api" in e.lower() for e in errors)
 
 
-def test_evolucao_tab_renders(app):
-    # The evolution tab shows the two trend subheaders when >= 2 exams exist
-    subheaders = [h.value for h in app.subheader]
+def test_evolucao_section_renders(section):
+    # The evolution section shows the two trend subheaders when >= 2 exams exist
+    subheaders = [h.value for h in section("evolucao").subheader]
     assert "Evolução geral da turma" in subheaders
     assert "Evolução por área" in subheaders
 

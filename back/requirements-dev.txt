@@ -3,6 +3,7 @@
 #   uv pip install -r requirements.txt -r requirements-dev.txt
 pytest>=7.0
 pytest-mock>=3.10
-pytest-snapshot>=0.9.0
+# syrupy provides the `snapshot` fixture the .ambr snapshots in src/tests use
+syrupy>=4.0.4
 freezegun>=1.2.0
 httpx>=0.27,<0.29

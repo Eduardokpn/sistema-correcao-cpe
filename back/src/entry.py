@@ -189,7 +189,7 @@ def show_template_layouts(omr_files, template, tuning_config):
     for file_path in omr_files:
         file_name = file_path.name
         file_path = str(file_path)
-        in_omr = cv2.imread(file_path, cv2.IMREAD_GRAYSCALE)
+        in_omr = ImageUtils.read_img(file_path, cv2.IMREAD_GRAYSCALE)
         in_omr = template.image_instance_ops.apply_preprocessors(
             file_path, in_omr, template
         )
@@ -217,20 +217,25 @@ def process_files(
         files_counter += 1
         file_name = file_path.name
 
-        in_omr = cv2.imread(str(file_path), cv2.IMREAD_GRAYSCALE)
+        in_omr = ImageUtils.read_img(file_path, cv2.IMREAD_GRAYSCALE)
 
         logger.info("")
-        logger.info(
-            f"({files_counter}) Opening image: \t'{file_path}'\tResolution: {in_omr.shape}"
-        )
+        # Uma imagem ilegível cai no mesmo tratamento de erro abaixo, em vez de
+        # quebrar o lote inteiro em 'NoneType' has no attribute 'shape'
+        if in_omr is None:
+            logger.error(f"({files_counter}) Could not open image: \t'{file_path}'")
+        else:
+            logger.info(
+                f"({files_counter}) Opening image: \t'{file_path}'\tResolution: {in_omr.shape}"
+            )
 
-        template.image_instance_ops.reset_all_save_img()
+            template.image_instance_ops.reset_all_save_img()
 
-        template.image_instance_ops.append_save_img(1, in_omr)
+            template.image_instance_ops.append_save_img(1, in_omr)
 
-        in_omr = template.image_instance_ops.apply_preprocessors(
-            file_path, in_omr, template
-        )
+            in_omr = template.image_instance_ops.apply_preprocessors(
+                file_path, in_omr, template
+            )
 
         if in_omr is None:
             # Error OMR case

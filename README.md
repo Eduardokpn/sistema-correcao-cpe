@@ -29,9 +29,9 @@ Três camadas, com fronteiras claras:
 ``
 
 - **`front/`** — aplicativo Streamlit voltado ao professor. Não acessa o banco
-  direto: fala com o backend pela API HTTP. Contém os quatro gráficos de sempre
-  (desempenho por área, por subárea, taxa de acerto por questão, ranking por
-  aluno) mais a aba de evolução da turma no tempo.
+  direto: fala com o backend pela API HTTP. Contém os gráficos de sempre
+  (desempenho por área e subárea, taxa de acerto por questão, ranking por
+  aluno) mais a seção de evolução da turma no tempo.
 - **`back/api/`** — serviço FastAPI. Expõe correção, resultados em formato longo
   e as respostas para as perguntas dos professores.
 - **`back/grading/`** — roda o pipeline OMR sobre as imagens e transforma a
@@ -58,7 +58,7 @@ As perguntas frequentes dos professores viram consultas diretas:
 
 ## Como rodar
 
-Pré-requisitos: Python 3.9+ e o stack do OMRChecker (OpenCV etc.) para a correção
+Pré-requisitos: Python 3.12 (a versão das imagens Docker e a usada nos testes) e o stack do OMRChecker (OpenCV etc.) para a correção
 de imagens. Ver `back/README.md` para as dependências de sistema do OpenCV.
 
 O backend e o frontend são serviços separados e cada um usa seu próprio ambiente
@@ -107,16 +107,90 @@ uv pip install -r requirements.txt -r requirements-dev.txt
 streamlit run app.py
 ```
 
-No app: aba **Correção** para enviar o gabarito e as imagens das provas; aba
-**Dashboard** para o desempenho do simulado escolhido; aba **Evolução** para
-acompanhar a turma ao longo dos simulados; aba **Dados e downloads** para as
-tabelas e exportações.
+No app, o menu lateral leva às seções: **Correção** para enviar o gabarito e as
+imagens das provas; **Dashboard** para o desempenho do simulado escolhido;
+**Evolução** para acompanhar a turma ao longo dos simulados; **Dados e
+downloads** para as tabelas, as exportações (incluindo o `ResultsByQuestion.csv`
+bruto) e as folhas com a leitura marcada, para conferência visual.
+
+## Como corrigir uma prova
+
+1. **Gabarito:** envie uma planilha `.csv` ou `.xlsx` com uma coluna de questão e
+   outra de resposta correta. As colunas são reconhecidas pelo nome:
+   - questão: o nome deve conter `Questão`, `question`, `nº` ou `número`;
+   - resposta: o nome deve conter `Gabarito`, `resposta`, `correta` ou `answer`.
+
+   Os valores da coluna de questão precisam ser **`q1`, `q2`, `q3`…**, os mesmos
+   rótulos do template. Colunas extras, como `Área` e `Sub-Área`, são
+   aproveitadas no dashboard.
+
+   | Questão | Gabarito | Área | Sub-Área |
+   |---|---|---|---|
+   | q1 | E | Matemática | Funções |
+   | q2 | B | Física | Cinemática |
+
+2. **Tamanho da prova:** escolha **72, 80 ou 90 questões**. O app já sugere a
+   opção que bate com o número de linhas do gabarito enviado.
+
+   | Opção | Folha impressa | Exemplo |
+   |---|---|---|
+   | 72 questões | folha de 90, lida só até a q72 | UNICAMP 1ª fase |
+   | 80 questões | folha de 80 | FUVEST |
+   | 90 questões | folha de 90 | UNESP 1ª fase |
+
+   Se o gabarito tiver questões que a folha escolhida não tem (por exemplo,
+   `q85` numa prova de 80, ou números sem o `q`), o app mostra o erro e bloqueia
+   a correção (a API também recusa, com 422). Se a folha tiver questões que
+   faltam no gabarito, o app só avisa.
+
+3. **Provas escaneadas:** envie as imagens das folhas em `.jpg`, `.jpeg` ou
+   `.png`. O nome do arquivo vira o nome do aluno (`Beatriz_Venancio_Bezerra.jpg`
+   aparece como "Beatriz Venancio Bezerra"); ajuste os nomes e informe a turma na
+   tabela antes de corrigir.
+4. Clique em **Corrigir provas** e veja o resultado em **Dashboard** e **Dados e
+   downloads**.
+
+### Cuidados no scan
+
+Antes de ler as bolhas, o sistema localiza os **4 marcadores pretos em forma de
+"L" nos cantos da folha** e alinha a imagem por eles. Por isso, o mesmo template
+funciona mesmo que a folha saia deslocada, girada ou com tamanho diferente no
+scanner.
+
+- **Os 4 marcadores dos cantos precisam aparecer inteiros na imagem.** Se o scan
+  cortar algum, a folha não é corrigida e o log da correção traz
+  `Corner marks not found`. Nesse caso, escaneie a folha de novo.
+- Use uma resolução de pelo menos 150 dpi. Tons de cinza ou colorido funcionam.
+- Rabiscos ou manchas perto dos cantos podem atrapalhar a localização dos
+  marcadores.
+
+### Se o modelo da folha mudar
+
+Os templates em [back/folha-cpe/](back/folha-cpe/) (`template_72.json`,
+`template_80.json`, `template_90.json` e o `config.json`) descrevem onde ficam
+as bolhas, com coordenadas medidas a partir dos marcadores dos cantos. Medidas
+assim, as folhas de 80 e de 90 têm as bolhas nas mesmas posições; a de 90 só
+acrescenta o bloco 81–90. Eles valem para qualquer scan **destas** folhas e só
+precisam ser refeitos se o layout impresso mudar.
+
+Para um tamanho novo de prova que use uma das folhas atuais, crie um
+`template_N.json` com os blocos certos e acrescente `N` em `QUESTION_COUNTS`, em
+[back/grading/sheets.py](back/grading/sheets.py) e em
+[front/app.py](front/app.py).
+
+O alinhamento pelos cantos é feito pelo pré-processador
+[CropOnCornerMarks](back/src/processors/CropOnCornerMarks.py), ativado no
+template pela seção `preProcessors`. Para conferir um template, rode a correção
+pela linha de comando (`python main.py -i pasta -o saida`, com o template
+copiado para a pasta como `template.json`) e abra as imagens de
+`saida/CheckedOMRs/`: cada marcação lida deve ficar sobre a bolha correspondente.
 
 ## Variáveis de ambiente
 
 | Variável | Onde | Padrão | Para quê |
 | --- | --- | --- | --- |
 | `CPE_DATABASE_URL` | back | `sqlite:///back/cpe_omr.db` | Conexão do banco (troque para PostgreSQL sem mexer no código) |
+| `CPE_ARTIFACTS_DIR` | back | `back/outputs/gradings` | Onde ficam o `ResultsByQuestion.csv` e as folhas marcadas de cada simulado |
 | `CPE_API_HOST` | back | `127.0.0.1` | Host em que a API escuta (`python -m api.app`) |
 | `CPE_API_PORT` | back | `8001` | Porta em que a API escuta (`python -m api.app`) |
 | `CPE_API_URL` | front | `http://localhost:8001` | URL do backend que o Streamlit consome |
@@ -137,10 +211,10 @@ cd back && python -m pytest src/tests
 ```
 
 > As amostras em `src/tests/test_all_samples.py` comparam a saída do pipeline com
-> snapshots gravados numa combinação específica de OpenCV/numpy e são sensíveis a
-> mudanças de versão. Como o repositório não versiona um lockfile, elas podem
-> divergir fora do ambiente de CI original. As suítes `data/`, `grading/`, `api/`
-> e `front/` não dependem disso.
+> snapshots (`syrupy`). O nome dos arquivos de saída inclui a hora local, então
+> `src/tests/conftest.py` fixa o fuso em que os snapshots foram gravados. Depois
+> de uma mudança intencional no formato de saída, regrave com
+> `python -m pytest src/tests --snapshot-update` e revise o diff.
 
 ## Migrações do banco
 

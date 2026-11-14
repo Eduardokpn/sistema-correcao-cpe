@@ -70,6 +70,7 @@ TEMPLATE_SCHEMA = {
                     "name": {
                         "type": "string",
                         "enum": [
+                            "CropOnCornerMarks",
                             "CropOnMarkers",
                             "CropPage",
                             "FeatureBasedAlignment",
@@ -98,6 +99,21 @@ TEMPLATE_SCHEMA = {
                                         "sheetToMarkerWidthRatio": {"type": "number"},
                                     },
                                     "required": ["relativePath"],
+                                }
+                            }
+                        },
+                    },
+                    {
+                        "if": {"properties": {"name": {"const": "CropOnCornerMarks"}}},
+                        "then": {
+                            "properties": {
+                                "options": {
+                                    "type": "object",
+                                    "additionalProperties": False,
+                                    "properties": {
+                                        "markSizeRange": two_positive_numbers,
+                                        "searchRegion": zero_to_one_number,
+                                    },
                                 }
                             }
                         },

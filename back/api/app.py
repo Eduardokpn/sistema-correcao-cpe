@@ -10,6 +10,8 @@ Endpoints:
   GET  /results                        - long-format rows (filters: exam/class/student/subject)
   POST /gradings/results-csv           - ingest a ResultsByQuestion.csv + metadata
   POST /gradings                       - grade uploaded images then ingest (needs OMR stack)
+  GET  /exams/{id}/results-by-question.csv - raw sheet of the latest image grading
+  GET  /exams/{id}/marked-sheets[/{file}]  - sheets with the detected marks drawn on
   GET  /performance/student-subject    - Q1
   GET  /performance/student-exam       - Q2
   GET  /performance/class-exam         - Q3
@@ -28,12 +30,14 @@ from typing import List, Optional
 
 import pandas as pd
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Query, UploadFile
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
 from api import schemas
 from data import repositories as repo
 from data.database import get_session_factory, init_db
 from data.repositories import LONG_FORMAT_COLUMNS
+from grading import artifacts
 from grading.ingest import SheetMetadata, ingest_results_by_question
 from grading.results import load_results_by_question
 
@@ -195,16 +199,20 @@ def _register_routes(app: FastAPI) -> None:
         student_names: Optional[str] = Form(default=None),
         student_classes: Optional[str] = Form(default=None),
         class_turnos: Optional[str] = Form(default=None),
+        question_count: Optional[int] = Form(default=None),
         db: Session = Depends(get_db),
     ):
         """Grade uploaded sheet images with the OMR pipeline, then ingest.
+
+        `question_count` (72, 80 or 90) selects the CPE sheet template; omitted,
+        the default sheet (80) is used.
 
         Imports the OMR pipeline lazily so the API loads without the OpenCV
         stack; a missing dependency surfaces as a clear 503 instead of an
         import-time crash.
         """
         try:
-            from api.grading_bridge import grade_and_frame
+            from api.grading_bridge import grade
         except Exception as error:  # pragma: no cover - env-dependent
             raise HTTPException(
                 status_code=503,
@@ -233,7 +241,9 @@ def _register_routes(app: FastAPI) -> None:
                 detail=f"Planilha do gabarito inválida: {error}",
             )
         try:
-            results, log = grade_and_frame(image_payload, answer_key_frame)
+            graded = grade(
+                image_payload, answer_key_frame, question_count=question_count
+            )
         except Exception as error:
             raise HTTPException(status_code=422, detail=str(error))
 
@@ -245,17 +255,47 @@ def _register_routes(app: FastAPI) -> None:
             student_classes=_parse_json_map(student_classes),
             class_turnos=_parse_json_map(class_turnos),
         )
-        sheets = ingest_results_by_question(db, results, metadata)
+        sheets = ingest_results_by_question(db, graded.results, metadata)
         db.commit()
         exam = repo.get_or_create_exam(db, exam_name)
         db.commit()
+        # Best effort: the answers are already saved, so a full disk must not
+        # turn a finished correction into an error
+        try:
+            artifacts.save(exam.id, graded.raw_csv, graded.marked_images)
+        except OSError as error:
+            graded.log += f"\nWARNING could not store the grading files: {error}"
         return schemas.GradingResultOut(
             exam_id=exam.id,
             exam_name=exam.name,
             sheets_ingested=len(sheets),
             students=[s.student.name for s in sheets],
-            log=log,
+            log=graded.log,
         )
+
+    # ------------------------------------------------------- grading files
+    @app.get("/exams/{exam_id}/results-by-question.csv")
+    def results_by_question_csv(exam_id: int):
+        """The raw ResultsByQuestion.csv of the exam's latest image grading."""
+        path = artifacts.results_csv_path(exam_id)
+        if path is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Este simulado não tem planilha ResultsByQuestion guardada.",
+            )
+        return FileResponse(path, media_type="text/csv", filename=path.name)
+
+    @app.get("/exams/{exam_id}/marked-sheets", response_model=List[str])
+    def marked_sheets(exam_id: int):
+        """File names of the exam's sheets with the detected marks drawn on."""
+        return artifacts.marked_sheet_names(exam_id)
+
+    @app.get("/exams/{exam_id}/marked-sheets/{file_name}")
+    def marked_sheet(exam_id: int, file_name: str):
+        path = artifacts.marked_sheet_path(exam_id, file_name)
+        if path is None:
+            raise HTTPException(status_code=404, detail="Folha não encontrada.")
+        return FileResponse(path)
 
     # ---------------------------------------------------- teacher questions
     @app.get("/performance/student-subject", response_model=schemas.PerformanceOut)

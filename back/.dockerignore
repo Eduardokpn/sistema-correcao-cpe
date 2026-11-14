@@ -1,0 +1,15 @@
+# Read by `docker build` because the build context is back/ (see docker-compose.yml)
+.git
+.venv
+venv
+**/__pycache__
+**/*.pyc
+.pytest_cache
+.mypy_cache
+.coverage
+**/.DS_Store
+# Local database and grading outputs stay out of the image
+*.db
+data/*.db
+outputs
+inputs

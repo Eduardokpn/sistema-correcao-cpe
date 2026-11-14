@@ -12,7 +12,9 @@ from data.database import get_engine, init_db
 
 
 @pytest.fixture
-def client():
+def client(tmp_path, monkeypatch):
+    # Grading files (raw csv, marked sheets) go to a throwaway folder
+    monkeypatch.setenv("CPE_ARTIFACTS_DIR", str(tmp_path / "gradings"))
     # A single shared in-memory engine for the life of one test
     engine = get_engine(url="sqlite:///:memory:")
     init_db(engine)

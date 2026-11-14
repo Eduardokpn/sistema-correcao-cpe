@@ -174,6 +174,8 @@ def run_correction(
         try:
             entry_point(input_dir, args)
         except Exception as error:
+            # A failed run must not leave its temp folder behind either
+            shutil.rmtree(work_dir, ignore_errors=True)
             raise CorrectionError(f"{error}\n\n{captured.text()}") from error
         log_text = captured.text()
 
