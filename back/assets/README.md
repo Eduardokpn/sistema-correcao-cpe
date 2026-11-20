@@ -1,6 +1,8 @@
 # Marca
 
-Coloque aqui os arquivos do logo CPE USP. O app procura por, nesta ordem:
+Coloque aqui os arquivos do logo CPE USP. (O app Streamlit lê primeiro de
+`front/assets/`, que é o que entra na imagem Docker do front, e usa esta pasta
+como reserva.) O app procura por, nesta ordem:
 
 | Uso | Nomes aceitos (qualquer extensão `.png`, `.jpg`, `.svg`, `.webp`) |
 |---|---|

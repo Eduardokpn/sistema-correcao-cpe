@@ -1,0 +1,9 @@
+# Read by `docker build` because the build context is front/ (see docker-compose.yml).
+# .streamlit/ is NOT ignored: it carries the theme.
+.git
+.venv
+venv
+**/__pycache__
+**/*.pyc
+.pytest_cache
+**/.DS_Store

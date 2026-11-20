@@ -3,10 +3,22 @@ dotmap>=1.3.30
 jsonschema>=4.17.3
 matplotlib>=3.7.1
 numpy>=1.25.0
-opencv-python>=4.8.0
-openpyxl>=3.1.0
+# Headless build: the server never displays windows, so avoid the GUI/GL system
+# libs that plain opencv-python requires (libGL.so.1 etc.).
+opencv-python-headless>=4.8.0,<5
 pandas>=2.0.2
+# Lets pandas read .xlsx gabaritos (pd.read_excel); without it uploads of Excel
+# answer keys fail with "Missing optional dependency 'openpyxl'".
+openpyxl>=3.1.0
 rich>=13.4.2
 screeninfo>=0.8.1
-plotly>=5.20.0
-streamlit>=1.49.0
+sqlalchemy>=2.0.0
+alembic>=1.13.0
+# Pin the FastAPI/Starlette/uvicorn stack to a mutually compatible range.
+# starlette >= 0.42 pulls in the httpx2-only TestClient, which breaks the API
+# tests, so cap it below that.
+fastapi>=0.110.0,<0.120
+starlette>=0.37,<0.42
+uvicorn>=0.29.0,<0.35
+websockets>=11,<13
+python-multipart>=0.0.9

@@ -1,0 +1,15 @@
+Alembic migrations for the CPE OMR database.
+
+The database URL is resolved in env.py from the CPE_DATABASE_URL environment
+variable, defaulting to a local SQLite file (back/cpe_omr.db).
+
+Common commands (run from back/):
+
+    # apply all migrations
+    alembic upgrade head
+
+    # create a new migration after changing data/models.py
+    alembic revision --autogenerate -m "describe change"
+
+    # roll back the last migration
+    alembic downgrade -1

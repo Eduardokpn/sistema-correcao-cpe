@@ -1,0 +1,1349 @@
+# serializer version: 1
+# name: test_run_answer_key_using_csv
+  dict({
+    'Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5"
+  
+    ''',
+    'Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5"
+  
+    ''',
+    'Results/ResultsByQuestion_05AM.csv': '''
+      "question","adrian_omr.png"
+      "score",5.0
+      "q1","correct-C"
+      "q2","correct-E"
+      "q3","correct-A"
+      "q4","correct-B"
+      "q5","correct-B"
+  
+    ''',
+    'Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5"
+      "adrian_omr.png","samples/answer-key/using-csv/adrian_omr.png","outputs/answer-key/using-csv/CheckedOMRs/adrian_omr.png","5.0","correct-C","correct-E","correct-A","correct-B","correct-B"
+  
+    ''',
+  })
+# ---
+# name: test_run_answer_key_weighted_answers
+  dict({
+    'images/Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5"
+  
+    ''',
+    'images/Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5"
+  
+    ''',
+    'images/Results/ResultsByQuestion_05AM.csv': '''
+      "question","adrian_omr.png","adrian_omr_2.png"
+      "score",5.5,10.0
+      "q1","incorrect-B","correct-C"
+      "q2","correct-E","correct-E"
+      "q3","correct-A","correct-A"
+      "q4","correct-C","correct-B"
+      "q5","incorrect-B","incorrect-B"
+  
+    ''',
+    'images/Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5"
+      "adrian_omr.png","samples/answer-key/weighted-answers/images/adrian_omr.png","outputs/answer-key/weighted-answers/images/CheckedOMRs/adrian_omr.png","5.5","incorrect-B","correct-E","correct-A","correct-C","incorrect-B"
+      "adrian_omr_2.png","samples/answer-key/weighted-answers/images/adrian_omr_2.png","outputs/answer-key/weighted-answers/images/CheckedOMRs/adrian_omr_2.png","10.0","correct-C","correct-E","correct-A","correct-B","incorrect-B"
+  
+    ''',
+  })
+# ---
+# name: test_run_community_Antibodyy
+  dict({
+    'Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5","q6"
+  
+    ''',
+    'Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5","q6"
+  
+    ''',
+    'Results/ResultsByQuestion_05AM.csv': '''
+      "question","simple_omr_sheet.jpg"
+      "q1","A"
+      "q2","C"
+      "q3","B"
+      "q4","D"
+      "q5","E"
+      "q6","B"
+  
+    ''',
+    'Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5","q6"
+      "simple_omr_sheet.jpg","samples/community/Antibodyy/simple_omr_sheet.jpg","outputs/community/Antibodyy/CheckedOMRs/simple_omr_sheet.jpg","0","A","C","B","D","E","B"
+  
+    ''',
+  })
+# ---
+# name: test_run_community_Sandeep_1507
+  dict({
+    'Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","Booklet_No","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100","q101","q102","q103","q104","q105","q106","q107","q108","q109","q110","q111","q112","q113","q114","q115","q116","q117","q118","q119","q120","q121","q122","q123","q124","q125","q126","q127","q128","q129","q130","q131","q132","q133","q134","q135","q136","q137","q138","q139","q140","q141","q142","q143","q144","q145","q146","q147","q148","q149","q150","q151","q152","q153","q154","q155","q156","q157","q158","q159","q160","q161","q162","q163","q164","q165","q166","q167","q168","q169","q170","q171","q172","q173","q174","q175","q176","q177","q178","q179","q180","q181","q182","q183","q184","q185","q186","q187","q188","q189","q190","q191","q192","q193","q194","q195","q196","q197","q198","q199","q200"
+  
+    ''',
+    'Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","Booklet_No","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100","q101","q102","q103","q104","q105","q106","q107","q108","q109","q110","q111","q112","q113","q114","q115","q116","q117","q118","q119","q120","q121","q122","q123","q124","q125","q126","q127","q128","q129","q130","q131","q132","q133","q134","q135","q136","q137","q138","q139","q140","q141","q142","q143","q144","q145","q146","q147","q148","q149","q150","q151","q152","q153","q154","q155","q156","q157","q158","q159","q160","q161","q162","q163","q164","q165","q166","q167","q168","q169","q170","q171","q172","q173","q174","q175","q176","q177","q178","q179","q180","q181","q182","q183","q184","q185","q186","q187","q188","q189","q190","q191","q192","q193","q194","q195","q196","q197","q198","q199","q200"
+  
+    ''',
+    'Results/ResultsByQuestion_05AM.csv': '''
+      "question","omr-1.png","omr-2.png","omr-3.png"
+      "Booklet_No","0190880","0no22nonono","0nononono73"
+      "q1","D","A","B"
+      "q2","C","B","A"
+      "q3","B","B","C"
+      "q4","A","A","D"
+      "q5","A","D","A"
+      "q6","B","C","D"
+      "q7","C","B","D"
+      "q8","D","D","A"
+      "q9","D","C","C"
+      "q10","C","D","A"
+      "q11","B","D","A"
+      "q12","A","D","B"
+      "q13","D","B","C"
+      "q14","A","B","A"
+      "q15","B","D","A"
+      "q16","C","D","C"
+      "q17","D","D","A"
+      "q18","","B","B"
+      "q19","B","C","A"
+      "q20","D","C","D"
+      "q21","C","A","C"
+      "q22","A","A","C"
+      "q23","C","B","A"
+      "q24","C","A","D"
+      "q25","B","D","D"
+      "q26","A","A","C"
+      "q27","D","A","C"
+      "q28","A","B","C"
+      "q29","AC","A","A"
+      "q30","C","C","C"
+      "q31","B","A","C"
+      "q32","D","C","B"
+      "q33","C","D","B"
+      "q34","B","D","D"
+      "q35","A","D","D"
+      "q36","B","","C"
+      "q37","B","",""
+      "q38","D","C",""
+      "q39","D","C","C"
+      "q40","A","B","B"
+      "q41","C","B",""
+      "q42","B","B",""
+      "q43","D","","D"
+      "q44","A","D","A"
+      "q45","C","","A"
+      "q46","B","C","A"
+      "q47","D","D","A"
+      "q48","B","",""
+      "q49","D","D","A"
+      "q50","A","B","C"
+      "q51","A","A","C"
+      "q52","B","D","C"
+      "q53","C","B","D"
+      "q54","D","A","C"
+      "q55","C","C",""
+      "q56","B","A","A"
+      "q57","A","C","B"
+      "q58","D","A","C"
+      "q59","D","C","D"
+      "q60","A","B","B"
+      "q61","B","A","C"
+      "q62","C","D","C"
+      "q63","D","C","C"
+      "q64","C","B","D"
+      "q65","B","C","A"
+      "q66","A","B","B"
+      "q67","B","C","B"
+      "q68","C","D","B"
+      "q69","D","B","D"
+      "q70","A","B","D"
+      "q71","B","D","B"
+      "q72","C","C","B"
+      "q73","D","C","C"
+      "q74","B","D","D"
+      "q75","A","D","B"
+      "q76","C","A","D"
+      "q77","D","D","A"
+      "q78","C","A","B"
+      "q79","B","D","A"
+      "q80","A","C","B"
+      "q81","D","B","C"
+      "q82","B","D","A"
+      "q83","D","C","C"
+      "q84","A","A","A"
+      "q85","A","C","C"
+      "q86","B","","D"
+      "q87","A","C",""
+      "q88","C","B",""
+      "q89","B","B","A"
+      "q90","D","","B"
+      "q91","C","A",""
+      "q92","D","A","B"
+      "q93","B","D","C"
+      "q94","A","","D"
+      "q95","C","B","A"
+      "q96","C","A","D"
+      "q97","B","","D"
+      "q98","D","C",""
+      "q99","B","A",""
+      "q100","C","D","C"
+      "q101","B","D","D"
+      "q102","A","C","B"
+      "q103","D","C","B"
+      "q104","C","A","A"
+      "q105","B","C","A"
+      "q106","A","A","D"
+      "q107","B","C","D"
+      "q108","C","D","B"
+      "q109","D","A","A"
+      "q110","A","A","B"
+      "q111","A","A","B"
+      "q112","A","D","C"
+      "q113","B","D","C"
+      "q114","B","B","D"
+      "q115","A","C","D"
+      "q116","B","B","C"
+      "q117","C","B","A"
+      "q118","D","B","D"
+      "q119","A","D","C"
+      "q120","A","A","D"
+      "q121","D","C","C"
+      "q122","C","D","C"
+      "q123","B","D","B"
+      "q124","A","A","C"
+      "q125","","A","D"
+      "q126","A","A","C"
+      "q127","B","C","D"
+      "q128","C","D","A"
+      "q129","D","C","B"
+      "q130","D","C","D"
+      "q131","D","B","C"
+      "q132","B","D","B"
+      "q133","B","A","D"
+      "q134","C","A","B"
+      "q135","C","C","B"
+      "q136","D","B",""
+      "q137","C","","D"
+      "q138","C","D",""
+      "q139","D","A","B"
+      "q140","D","C","D"
+      "q141","C","C","B"
+      "q142","C","C","B"
+      "q143","B","","C"
+      "q144","B","","A"
+      "q145","A","","D"
+      "q146","A","A",""
+      "q147","D","C","C"
+      "q148","D","",""
+      "q149","B","D","C"
+      "q150","A","A",""
+      "q151","D","B","B"
+      "q152","C","A","C"
+      "q153","B","A","A"
+      "q154","A","C","B"
+      "q155","A","A","B"
+      "q156","D","D","D"
+      "q157","D","B","D"
+      "q158","B","B","D"
+      "q159","B","A","B"
+      "q160","A","D","A"
+      "q161","A","A","D"
+      "q162","B","B","D"
+      "q163","C","C","A"
+      "q164","D","A","D"
+      "q165","D","C","D"
+      "q166","C","D","C"
+      "q167","B","D","B"
+      "q168","A","D","B"
+      "q169","B","C","D"
+      "q170","D","A","C"
+      "q171","A","C","B"
+      "q172","C","A","A"
+      "q173","C","C","C"
+      "q174","C","D","D"
+      "q175","A","A","A"
+      "q176","A","A","D"
+      "q177","B","A","D"
+      "q178","B","D","A"
+      "q179","D","A","C"
+      "q180","D","B","A"
+      "q181","A","A","B"
+      "q182","A","B","D"
+      "q183","B","C","C"
+      "q184","C","B","C"
+      "q185","D","A","C"
+      "q186","B","","A"
+      "q187","D","B","D"
+      "q188","A","C",""
+      "q189","B","D",""
+      "q190","C","D","B"
+      "q191","D","","B"
+      "q192","AD","",""
+      "q193","C","D","C"
+      "q194","D","C","C"
+      "q195","B","C","B"
+      "q196","C","C","B"
+      "q197","A","","C"
+      "q198","B","C",""
+      "q199","C","A",""
+      "q200","D","","B"
+  
+    ''',
+    'Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","Booklet_No","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100","q101","q102","q103","q104","q105","q106","q107","q108","q109","q110","q111","q112","q113","q114","q115","q116","q117","q118","q119","q120","q121","q122","q123","q124","q125","q126","q127","q128","q129","q130","q131","q132","q133","q134","q135","q136","q137","q138","q139","q140","q141","q142","q143","q144","q145","q146","q147","q148","q149","q150","q151","q152","q153","q154","q155","q156","q157","q158","q159","q160","q161","q162","q163","q164","q165","q166","q167","q168","q169","q170","q171","q172","q173","q174","q175","q176","q177","q178","q179","q180","q181","q182","q183","q184","q185","q186","q187","q188","q189","q190","q191","q192","q193","q194","q195","q196","q197","q198","q199","q200"
+      "omr-1.png","samples/community/Sandeep-1507/omr-1.png","outputs/community/Sandeep-1507/CheckedOMRs/omr-1.png","0","0190880","D","C","B","A","A","B","C","D","D","C","B","A","D","A","B","C","D","","B","D","C","A","C","C","B","A","D","A","AC","C","B","D","C","B","A","B","B","D","D","A","C","B","D","A","C","B","D","B","D","A","A","B","C","D","C","B","A","D","D","A","B","C","D","C","B","A","B","C","D","A","B","C","D","B","A","C","D","C","B","A","D","B","D","A","A","B","A","C","B","D","C","D","B","A","C","C","B","D","B","C","B","A","D","C","B","A","B","C","D","A","A","A","B","B","A","B","C","D","A","A","D","C","B","A","","A","B","C","D","D","D","B","B","C","C","D","C","C","D","D","C","C","B","B","A","A","D","D","B","A","D","C","B","A","A","D","D","B","B","A","A","B","C","D","D","C","B","A","B","D","A","C","C","C","A","A","B","B","D","D","A","A","B","C","D","B","D","A","B","C","D","AD","C","D","B","C","A","B","C","D"
+      "omr-2.png","samples/community/Sandeep-1507/omr-2.png","outputs/community/Sandeep-1507/CheckedOMRs/omr-2.png","0","0no22nonono","A","B","B","A","D","C","B","D","C","D","D","D","B","B","D","D","D","B","C","C","A","A","B","A","D","A","A","B","A","C","A","C","D","D","D","","","C","C","B","B","B","","D","","C","D","","D","B","A","D","B","A","C","A","C","A","C","B","A","D","C","B","C","B","C","D","B","B","D","C","C","D","D","A","D","A","D","C","B","D","C","A","C","","C","B","B","","A","A","D","","B","A","","C","A","D","D","C","C","A","C","A","C","D","A","A","A","D","D","B","C","B","B","B","D","A","C","D","D","A","A","A","C","D","C","C","B","D","A","A","C","B","","D","A","C","C","C","","","","A","C","","D","A","B","A","A","C","A","D","B","B","A","D","A","B","C","A","C","D","D","D","C","A","C","A","C","D","A","A","A","D","A","B","A","B","C","B","A","","B","C","D","D","","","D","C","C","C","","C","A",""
+      "omr-3.png","samples/community/Sandeep-1507/omr-3.png","outputs/community/Sandeep-1507/CheckedOMRs/omr-3.png","0","0nononono73","B","A","C","D","A","D","D","A","C","A","A","B","C","A","A","C","A","B","A","D","C","C","A","D","D","C","C","C","A","C","C","B","B","D","D","C","","","C","B","","","D","A","A","A","A","","A","C","C","C","D","C","","A","B","C","D","B","C","C","C","D","A","B","B","B","D","D","B","B","C","D","B","D","A","B","A","B","C","A","C","A","C","D","","","A","B","","B","C","D","A","D","D","","","C","D","B","B","A","A","D","D","B","A","B","B","C","C","D","D","C","A","D","C","D","C","C","B","C","D","C","D","A","B","D","C","B","D","B","B","","D","","B","D","B","B","C","A","D","","C","","C","","B","C","A","B","B","D","D","D","B","A","D","D","A","D","D","C","B","B","D","C","B","A","C","D","A","D","D","A","C","A","B","D","C","C","C","A","D","","","B","B","","C","C","B","B","C","","","B"
+  
+    ''',
+  })
+# ---
+# name: test_run_community_Shamanth
+  dict({
+    'Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","q21","q22","q23","q24","q25","q26","q27","q28"
+  
+    ''',
+    'Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","q21","q22","q23","q24","q25","q26","q27","q28"
+  
+    ''',
+    'Results/ResultsByQuestion_05AM.csv': '''
+      "question","omr_sheet_01.png"
+      "q21","A"
+      "q22","B"
+      "q23","C"
+      "q24","D"
+      "q25","A"
+      "q26","C"
+      "q27","C"
+      "q28","D"
+  
+    ''',
+    'Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","q21","q22","q23","q24","q25","q26","q27","q28"
+      "omr_sheet_01.png","samples/community/Shamanth/omr_sheet_01.png","outputs/community/Shamanth/CheckedOMRs/omr_sheet_01.png","0","A","B","C","D","A","C","C","D"
+  
+    ''',
+  })
+# ---
+# name: test_run_community_UPSC_mock
+  dict({
+    'Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","Roll","Subject Code","bookletNo","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100"
+  
+    ''',
+    'Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","Roll","Subject Code","bookletNo","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100"
+  
+    ''',
+    'Results/ResultsByQuestion_05AM.csv': '''
+      "question","answer_key.jpg"
+      "score",200.0
+      "Roll",""
+      "Subject Code",""
+      "bookletNo",""
+      "q1","correct-C"
+      "q2","correct-D"
+      "q3","correct-A"
+      "q4","correct-C"
+      "q5","correct-C"
+      "q6","correct-C"
+      "q7","correct-B"
+      "q8","correct-A"
+      "q9","correct-C"
+      "q10","correct-C"
+      "q11","correct-B"
+      "q12","correct-D"
+      "q13","correct-B"
+      "q14","correct-D"
+      "q15","correct-C"
+      "q16","correct-C"
+      "q17","correct-B"
+      "q18","correct-D"
+      "q19","correct-B"
+      "q20","correct-D"
+      "q21","correct-C"
+      "q22","correct-C"
+      "q23","correct-C"
+      "q24","correct-B"
+      "q25","correct-D"
+      "q26","correct-D"
+      "q27","correct-D"
+      "q28","correct-B"
+      "q29","correct-A"
+      "q30","correct-D"
+      "q31","correct-D"
+      "q32","correct-C"
+      "q33","correct-A"
+      "q34","correct-B"
+      "q35","correct-C"
+      "q36","correct-A"
+      "q37","correct-D"
+      "q38","correct-A"
+      "q39","correct-A"
+      "q40","correct-A"
+      "q41","correct-D"
+      "q42","correct-D"
+      "q43","correct-B"
+      "q44","correct-A"
+      "q45","correct-B"
+      "q46","correct-C"
+      "q47","correct-B"
+      "q48","correct-A"
+      "q49","correct-C"
+      "q50","correct-D"
+      "q51","correct-C"
+      "q52","correct-D"
+      "q53","correct-A"
+      "q54","correct-B"
+      "q55","correct-C"
+      "q56","correct-A"
+      "q57","correct-C"
+      "q58","correct-C"
+      "q59","correct-C"
+      "q60","correct-D"
+      "q61","correct-B"
+      "q62","correct-C"
+      "q63","correct-C"
+      "q64","correct-C"
+      "q65","correct-C"
+      "q66","correct-A"
+      "q67","correct-D"
+      "q68","correct-A"
+      "q69","correct-D"
+      "q70","correct-A"
+      "q71","correct-D"
+      "q72","correct-C"
+      "q73","correct-C"
+      "q74","correct-D"
+      "q75","correct-C"
+      "q76","correct-D"
+      "q77","correct-A"
+      "q78","correct-A"
+      "q79","correct-C"
+      "q80","correct-B"
+      "q81","correct-C"
+      "q82","correct-D"
+      "q83","correct-C"
+      "q84","correct-A"
+      "q85","correct-B"
+      "q86","correct-C"
+      "q87","correct-B"
+      "q88","correct-D"
+      "q89","correct-A"
+      "q90","correct-A"
+      "q91","correct-C"
+      "q92","correct-A"
+      "q93","correct-B"
+      "q94","correct-D"
+      "q95","correct-C"
+      "q96","correct-D"
+      "q97","correct-A"
+      "q98","correct-C"
+      "q99","correct-B"
+      "q100","correct-A"
+  
+    ''',
+    'Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","Roll","Subject Code","bookletNo","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100"
+      "answer_key.jpg","samples/community/UPSC-mock/answer_key.jpg","outputs/community/UPSC-mock/CheckedOMRs/answer_key.jpg","200.0","","","","correct-C","correct-D","correct-A","correct-C","correct-C","correct-C","correct-B","correct-A","correct-C","correct-C","correct-B","correct-D","correct-B","correct-D","correct-C","correct-C","correct-B","correct-D","correct-B","correct-D","correct-C","correct-C","correct-C","correct-B","correct-D","correct-D","correct-D","correct-B","correct-A","correct-D","correct-D","correct-C","correct-A","correct-B","correct-C","correct-A","correct-D","correct-A","correct-A","correct-A","correct-D","correct-D","correct-B","correct-A","correct-B","correct-C","correct-B","correct-A","correct-C","correct-D","correct-C","correct-D","correct-A","correct-B","correct-C","correct-A","correct-C","correct-C","correct-C","correct-D","correct-B","correct-C","correct-C","correct-C","correct-C","correct-A","correct-D","correct-A","correct-D","correct-A","correct-D","correct-C","correct-C","correct-D","correct-C","correct-D","correct-A","correct-A","correct-C","correct-B","correct-C","correct-D","correct-C","correct-A","correct-B","correct-C","correct-B","correct-D","correct-A","correct-A","correct-C","correct-A","correct-B","correct-D","correct-C","correct-D","correct-A","correct-C","correct-B","correct-A"
+  
+    ''',
+    'scan-angles/Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","Roll","Subject Code","bookletNo","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100"
+  
+    ''',
+    'scan-angles/Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","Roll","Subject Code","bookletNo","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100"
+  
+    ''',
+    'scan-angles/Results/ResultsByQuestion_05AM.csv': '''
+      "question","angle-1.jpg","angle-2.jpg","angle-3.jpg"
+      "score",70.67,70.67,70.67
+      "Roll","","",""
+      "Subject Code","","",""
+      "bookletNo","","",""
+      "q1","incorrect-D","incorrect-D","incorrect-D"
+      "q2","correct-D","correct-D","correct-D"
+      "q3","correct-A","correct-A","correct-A"
+      "q4","unmarked","unmarked","unmarked"
+      "q5","correct-C","correct-C","correct-C"
+      "q6","correct-C","correct-C","correct-C"
+      "q7","correct-B","correct-B","correct-B"
+      "q8","unmarked","unmarked","unmarked"
+      "q9","incorrect-A","incorrect-A","incorrect-A"
+      "q10","correct-C","correct-C","correct-C"
+      "q11","incorrect-C","incorrect-C","incorrect-C"
+      "q12","correct-D","correct-D","correct-D"
+      "q13","incorrect-A","incorrect-A","incorrect-A"
+      "q14","correct-D","correct-D","correct-D"
+      "q15","incorrect-A","incorrect-A","incorrect-A"
+      "q16","correct-C","correct-C","correct-C"
+      "q17","incorrect-A","incorrect-A","incorrect-A"
+      "q18","correct-D","correct-D","correct-D"
+      "q19","correct-B","correct-B","correct-B"
+      "q20","correct-D","correct-D","correct-D"
+      "q21","incorrect-D","incorrect-D","incorrect-D"
+      "q22","correct-C","correct-C","correct-C"
+      "q23","incorrect-D","incorrect-D","incorrect-D"
+      "q24","incorrect-D","incorrect-D","incorrect-D"
+      "q25","correct-D","correct-D","correct-D"
+      "q26","correct-D","correct-D","correct-D"
+      "q27","unmarked","unmarked","unmarked"
+      "q28","correct-B","correct-B","correct-B"
+      "q29","correct-A","correct-A","correct-A"
+      "q30","correct-D","correct-D","correct-D"
+      "q31","correct-D","correct-D","correct-D"
+      "q32","correct-C","correct-C","correct-C"
+      "q33","unmarked","unmarked","unmarked"
+      "q34","correct-B","correct-B","correct-B"
+      "q35","unmarked","unmarked","unmarked"
+      "q36","incorrect-C","incorrect-C","incorrect-C"
+      "q37","correct-D","correct-D","correct-D"
+      "q38","unmarked","unmarked","unmarked"
+      "q39","unmarked","unmarked","unmarked"
+      "q40","correct-A","correct-A","correct-A"
+      "q41","unmarked","unmarked","unmarked"
+      "q42","incorrect-A","incorrect-A","incorrect-A"
+      "q43","incorrect-C","incorrect-C","incorrect-C"
+      "q44","incorrect-C","incorrect-C","incorrect-C"
+      "q45","correct-B","correct-B","correct-B"
+      "q46","correct-C","correct-C","correct-C"
+      "q47","incorrect-A","incorrect-A","incorrect-A"
+      "q48","correct-A","correct-A","correct-A"
+      "q49","correct-C","correct-C","correct-C"
+      "q50","unmarked","unmarked","unmarked"
+      "q51","correct-C","correct-C","correct-C"
+      "q52","unmarked","unmarked","unmarked"
+      "q53","incorrect-D","incorrect-D","incorrect-D"
+      "q54","correct-B","correct-B","correct-B"
+      "q55","correct-C","correct-C","correct-C"
+      "q56","unmarked","unmarked","unmarked"
+      "q57","incorrect-B","incorrect-B","incorrect-B"
+      "q58","correct-C","correct-C","correct-C"
+      "q59","incorrect-D","incorrect-D","incorrect-D"
+      "q60","unmarked","unmarked","unmarked"
+      "q61","unmarked","unmarked","unmarked"
+      "q62","correct-C","correct-C","correct-C"
+      "q63","correct-C","correct-C","correct-C"
+      "q64","unmarked","unmarked","unmarked"
+      "q65","correct-C","correct-C","correct-C"
+      "q66","correct-A","correct-A","correct-A"
+      "q67","incorrect-B","incorrect-B","incorrect-B"
+      "q68","incorrect-C","incorrect-C","incorrect-C"
+      "q69","unmarked","unmarked","unmarked"
+      "q70","unmarked","unmarked","unmarked"
+      "q71","unmarked","unmarked","unmarked"
+      "q72","unmarked","unmarked","unmarked"
+      "q73","incorrect-D","incorrect-D","incorrect-D"
+      "q74","correct-D","correct-D","correct-D"
+      "q75","correct-C","correct-C","correct-C"
+      "q76","correct-D","correct-D","correct-D"
+      "q77","correct-A","correct-A","correct-A"
+      "q78","unmarked","unmarked","unmarked"
+      "q79","unmarked","unmarked","unmarked"
+      "q80","correct-B","correct-B","correct-B"
+      "q81","unmarked","unmarked","unmarked"
+      "q82","incorrect-B","incorrect-B","incorrect-B"
+      "q83","incorrect-D","incorrect-D","incorrect-D"
+      "q84","incorrect-C","incorrect-C","incorrect-C"
+      "q85","incorrect-C","incorrect-C","incorrect-C"
+      "q86","unmarked","unmarked","unmarked"
+      "q87","incorrect-D","incorrect-D","incorrect-D"
+      "q88","unmarked","unmarked","unmarked"
+      "q89","incorrect-D","incorrect-D","incorrect-D"
+      "q90","incorrect-C","incorrect-C","incorrect-C"
+      "q91","incorrect-D","incorrect-D","incorrect-D"
+      "q92","correct-A","correct-A","correct-A"
+      "q93","unmarked","unmarked","unmarked"
+      "q94","incorrect-A","incorrect-A","incorrect-A"
+      "q95","unmarked","unmarked","unmarked"
+      "q96","unmarked","unmarked","unmarked"
+      "q97","correct-A","correct-A","correct-A"
+      "q98","correct-C","correct-C","correct-C"
+      "q99","correct-B","correct-B","correct-B"
+      "q100","correct-A","correct-A","correct-A"
+  
+    ''',
+    'scan-angles/Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","Roll","Subject Code","bookletNo","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100"
+      "angle-1.jpg","samples/community/UPSC-mock/scan-angles/angle-1.jpg","outputs/community/UPSC-mock/scan-angles/CheckedOMRs/angle-1.jpg","70.66666666666669","","","","incorrect-D","correct-D","correct-A","unmarked","correct-C","correct-C","correct-B","unmarked","incorrect-A","correct-C","incorrect-C","correct-D","incorrect-A","correct-D","incorrect-A","correct-C","incorrect-A","correct-D","correct-B","correct-D","incorrect-D","correct-C","incorrect-D","incorrect-D","correct-D","correct-D","unmarked","correct-B","correct-A","correct-D","correct-D","correct-C","unmarked","correct-B","unmarked","incorrect-C","correct-D","unmarked","unmarked","correct-A","unmarked","incorrect-A","incorrect-C","incorrect-C","correct-B","correct-C","incorrect-A","correct-A","correct-C","unmarked","correct-C","unmarked","incorrect-D","correct-B","correct-C","unmarked","incorrect-B","correct-C","incorrect-D","unmarked","unmarked","correct-C","correct-C","unmarked","correct-C","correct-A","incorrect-B","incorrect-C","unmarked","unmarked","unmarked","unmarked","incorrect-D","correct-D","correct-C","correct-D","correct-A","unmarked","unmarked","correct-B","unmarked","incorrect-B","incorrect-D","incorrect-C","incorrect-C","unmarked","incorrect-D","unmarked","incorrect-D","incorrect-C","incorrect-D","correct-A","unmarked","incorrect-A","unmarked","unmarked","correct-A","correct-C","correct-B","correct-A"
+      "angle-2.jpg","samples/community/UPSC-mock/scan-angles/angle-2.jpg","outputs/community/UPSC-mock/scan-angles/CheckedOMRs/angle-2.jpg","70.66666666666669","","","","incorrect-D","correct-D","correct-A","unmarked","correct-C","correct-C","correct-B","unmarked","incorrect-A","correct-C","incorrect-C","correct-D","incorrect-A","correct-D","incorrect-A","correct-C","incorrect-A","correct-D","correct-B","correct-D","incorrect-D","correct-C","incorrect-D","incorrect-D","correct-D","correct-D","unmarked","correct-B","correct-A","correct-D","correct-D","correct-C","unmarked","correct-B","unmarked","incorrect-C","correct-D","unmarked","unmarked","correct-A","unmarked","incorrect-A","incorrect-C","incorrect-C","correct-B","correct-C","incorrect-A","correct-A","correct-C","unmarked","correct-C","unmarked","incorrect-D","correct-B","correct-C","unmarked","incorrect-B","correct-C","incorrect-D","unmarked","unmarked","correct-C","correct-C","unmarked","correct-C","correct-A","incorrect-B","incorrect-C","unmarked","unmarked","unmarked","unmarked","incorrect-D","correct-D","correct-C","correct-D","correct-A","unmarked","unmarked","correct-B","unmarked","incorrect-B","incorrect-D","incorrect-C","incorrect-C","unmarked","incorrect-D","unmarked","incorrect-D","incorrect-C","incorrect-D","correct-A","unmarked","incorrect-A","unmarked","unmarked","correct-A","correct-C","correct-B","correct-A"
+      "angle-3.jpg","samples/community/UPSC-mock/scan-angles/angle-3.jpg","outputs/community/UPSC-mock/scan-angles/CheckedOMRs/angle-3.jpg","70.66666666666669","","","","incorrect-D","correct-D","correct-A","unmarked","correct-C","correct-C","correct-B","unmarked","incorrect-A","correct-C","incorrect-C","correct-D","incorrect-A","correct-D","incorrect-A","correct-C","incorrect-A","correct-D","correct-B","correct-D","incorrect-D","correct-C","incorrect-D","incorrect-D","correct-D","correct-D","unmarked","correct-B","correct-A","correct-D","correct-D","correct-C","unmarked","correct-B","unmarked","incorrect-C","correct-D","unmarked","unmarked","correct-A","unmarked","incorrect-A","incorrect-C","incorrect-C","correct-B","correct-C","incorrect-A","correct-A","correct-C","unmarked","correct-C","unmarked","incorrect-D","correct-B","correct-C","unmarked","incorrect-B","correct-C","incorrect-D","unmarked","unmarked","correct-C","correct-C","unmarked","correct-C","correct-A","incorrect-B","incorrect-C","unmarked","unmarked","unmarked","unmarked","incorrect-D","correct-D","correct-C","correct-D","correct-A","unmarked","unmarked","correct-B","unmarked","incorrect-B","incorrect-D","incorrect-C","incorrect-C","unmarked","incorrect-D","unmarked","incorrect-D","incorrect-C","incorrect-D","correct-A","unmarked","incorrect-A","unmarked","unmarked","correct-A","correct-C","correct-B","correct-A"
+  
+    ''',
+  })
+# ---
+# name: test_run_community_UmarFarootAPS
+  dict({
+    'scans/Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","Roll_no","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100","q101","q102","q103","q104","q105","q106","q107","q108","q109","q110","q111","q112","q113","q114","q115","q116","q117","q118","q119","q120","q121","q122","q123","q124","q125","q126","q127","q128","q129","q130","q131","q132","q133","q134","q135","q136","q137","q138","q139","q140","q141","q142","q143","q144","q145","q146","q147","q148","q149","q150","q151","q152","q153","q154","q155","q156","q157","q158","q159","q160","q161","q162","q163","q164","q165","q166","q167","q168","q169","q170","q171","q172","q173","q174","q175","q176","q177","q178","q179","q180","q181","q182","q183","q184","q185","q186","q187","q188","q189","q190","q191","q192","q193","q194","q195","q196","q197","q198","q199","q200"
+  
+    ''',
+    'scans/Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","Roll_no","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100","q101","q102","q103","q104","q105","q106","q107","q108","q109","q110","q111","q112","q113","q114","q115","q116","q117","q118","q119","q120","q121","q122","q123","q124","q125","q126","q127","q128","q129","q130","q131","q132","q133","q134","q135","q136","q137","q138","q139","q140","q141","q142","q143","q144","q145","q146","q147","q148","q149","q150","q151","q152","q153","q154","q155","q156","q157","q158","q159","q160","q161","q162","q163","q164","q165","q166","q167","q168","q169","q170","q171","q172","q173","q174","q175","q176","q177","q178","q179","q180","q181","q182","q183","q184","q185","q186","q187","q188","q189","q190","q191","q192","q193","q194","q195","q196","q197","q198","q199","q200"
+  
+    ''',
+    'scans/Results/ResultsByQuestion_05AM.csv': '''
+      "question","scan-type-1.jpg","scan-type-2.jpg"
+      "score",49.0,20.0
+      "Roll_no","2468","0234"
+      "q1","incorrect-A","incorrect-A"
+      "q2","correct-C","incorrect-B"
+      "q3","incorrect","incorrect"
+      "q4","incorrect","incorrect"
+      "q5","correct-A","incorrect"
+      "q6","incorrect","correct-B"
+      "q7","incorrect-B","incorrect-A"
+      "q8","incorrect-C","incorrect-B"
+      "q9","correct-B","incorrect-C"
+      "q10","incorrect-D","incorrect-D"
+      "q11","incorrect-C","incorrect-C"
+      "q12","correct-A","incorrect-B"
+      "q13","correct-C","incorrect-A"
+      "q14","incorrect-D","correct-B"
+      "q15","incorrect-B","incorrect-C"
+      "q16","incorrect-C","incorrect-D"
+      "q17","incorrect-A","correct-C"
+      "q18","incorrect-B","incorrect-B"
+      "q19","incorrect-C","incorrect-A"
+      "q20","incorrect-A","incorrect-B"
+      "q21","incorrect-C","incorrect-C"
+      "q22","incorrect-B","incorrect-D"
+      "q23","incorrect-D","incorrect-C"
+      "q24","correct-C","incorrect-B"
+      "q25","incorrect-A","incorrect-A"
+      "q26","incorrect-B","incorrect-B"
+      "q27","incorrect-D","correct-C"
+      "q28","incorrect-C","incorrect-D"
+      "q29","correct-A","incorrect-C"
+      "q30","incorrect-C","incorrect-B"
+      "q31","incorrect-B","incorrect-A"
+      "q32","incorrect-D","correct-B"
+      "q33","correct-B","incorrect-C"
+      "q34","incorrect-A","incorrect-D"
+      "q35","incorrect-C","incorrect-C"
+      "q36","correct-D","incorrect-B"
+      "q37","incorrect-B","incorrect-A"
+      "q38","incorrect-C","correct-B"
+      "q39","incorrect-A","correct-C"
+      "q40","incorrect-C","incorrect-D"
+      "q41","incorrect-D","incorrect-C"
+      "q42","incorrect-A","incorrect-B"
+      "q43","incorrect-C","incorrect-A"
+      "q44","correct-D","incorrect-B"
+      "q45","incorrect-A","incorrect-C"
+      "q46","incorrect-B","incorrect-D"
+      "q47","incorrect-D","correct-C"
+      "q48","incorrect-C","incorrect-B"
+      "q49","incorrect-A","incorrect-A"
+      "q50","incorrect-C","correct-B"
+      "q51","incorrect-D","incorrect-A"
+      "q52","incorrect-B","incorrect-D"
+      "q53","incorrect-C","unmarked"
+      "q54","incorrect-A","unmarked"
+      "q55","incorrect-C","incorrect-AD"
+      "q56","incorrect-D","unmarked"
+      "q57","incorrect-B","unmarked"
+      "q58","incorrect-C","unmarked"
+      "q59","correct-D","incorrect-A"
+      "q60","incorrect-A","incorrect-D"
+      "q61","incorrect-B","unmarked"
+      "q62","incorrect-C","unmarked"
+      "q63","incorrect-B","unmarked"
+      "q64","correct-C","unmarked"
+      "q65","correct-D","unmarked"
+      "q66","incorrect-B","unmarked"
+      "q67","incorrect-D","incorrect-D"
+      "q68","correct-A","correct-A"
+      "q69","incorrect-C","unmarked"
+      "q70","correct-B","incorrect-D"
+      "q71","incorrect-D","unmarked"
+      "q72","incorrect-A","incorrect-A"
+      "q73","incorrect-B","unmarked"
+      "q74","incorrect-C","incorrect-D"
+      "q75","incorrect-B","unmarked"
+      "q76","incorrect-A","unmarked"
+      "q77","incorrect-C","unmarked"
+      "q78","correct-D","incorrect-A"
+      "q79","correct-B","unmarked"
+      "q80","correct-A","unmarked"
+      "q81","incorrect-C","incorrect-C"
+      "q82","incorrect-B","unmarked"
+      "q83","incorrect-C","unmarked"
+      "q84","incorrect-B","incorrect-D"
+      "q85","correct-A","unmarked"
+      "q86","incorrect-D","unmarked"
+      "q87","incorrect-B","incorrect-A"
+      "q88","incorrect-A","unmarked"
+      "q89","correct-C","unmarked"
+      "q90","incorrect-D","unmarked"
+      "q91","correct-B","incorrect-D"
+      "q92","incorrect-D","unmarked"
+      "q93","incorrect-B","correct-C"
+      "q94","incorrect-C","unmarked"
+      "q95","incorrect-B","incorrect-A"
+      "q96","incorrect-D","unmarked"
+      "q97","incorrect-A","incorrect-C"
+      "q98","incorrect-C","unmarked"
+      "q99","incorrect-B","incorrect-D"
+      "q100","incorrect-C","incorrect-B"
+      "q101","incorrect-B","incorrect-B"
+      "q102","incorrect-C","unmarked"
+      "q103","incorrect-D","unmarked"
+      "q104","incorrect-B","incorrect-A"
+      "q105","incorrect-C","unmarked"
+      "q106","incorrect-A","correct-D"
+      "q107","correct-B","unmarked"
+      "q108","incorrect-C","unmarked"
+      "q109","incorrect-A","unmarked"
+      "q110","incorrect-D","incorrect-D"
+      "q111","incorrect-C","unmarked"
+      "q112","incorrect-B","unmarked"
+      "q113","incorrect-D","unmarked"
+      "q114","correct-B","unmarked"
+      "q115","incorrect-A","incorrect-A"
+      "q116","correct-B","incorrect-D"
+      "q117","incorrect-C","unmarked"
+      "q118","incorrect-D","unmarked"
+      "q119","correct-D","incorrect-B"
+      "q120","correct-C","unmarked"
+      "q121","incorrect-B","unmarked"
+      "q122","correct-A","incorrect-D"
+      "q123","correct-B","unmarked"
+      "q124","correct-C","unmarked"
+      "q125","correct-D","incorrect-A"
+      "q126","correct-C","unmarked"
+      "q127","incorrect-B","unmarked"
+      "q128","incorrect-A","correct-D"
+      "q129","incorrect-B","unmarked"
+      "q130","incorrect-C","unmarked"
+      "q131","incorrect-D","unmarked"
+      "q132","correct-C","unmarked"
+      "q133","correct-B","unmarked"
+      "q134","incorrect-A","incorrect-D"
+      "q135","incorrect-B","unmarked"
+      "q136","incorrect-C","unmarked"
+      "q137","incorrect-D","unmarked"
+      "q138","incorrect-C","correct-A"
+      "q139","correct-B","incorrect-D"
+      "q140","incorrect-A","unmarked"
+      "q141","incorrect-B","unmarked"
+      "q142","correct-C","incorrect-A"
+      "q143","incorrect-B","unmarked"
+      "q144","correct-A","incorrect-B"
+      "q145","incorrect-C","unmarked"
+      "q146","incorrect-B","incorrect-D"
+      "q147","correct-A","unmarked"
+      "q148","incorrect-C","unmarked"
+      "q149","incorrect-A","unmarked"
+      "q150","correct-B","incorrect-C"
+      "q151","incorrect-C","incorrect-C"
+      "q152","correct-B","incorrect-D"
+      "q153","incorrect-C","incorrect-D"
+      "q154","incorrect-B","incorrect-A"
+      "q155","incorrect-A","unmarked"
+      "q156","incorrect-C","incorrect-D"
+      "q157","correct-A","unmarked"
+      "q158","incorrect-C","incorrect-A"
+      "q159","incorrect-B","incorrect-D"
+      "q160","incorrect-B","unmarked"
+      "q161","incorrect-C","unmarked"
+      "q162","incorrect-B","incorrect-D"
+      "q163","correct-A","unmarked"
+      "q164","incorrect-C","correct-B"
+      "q165","incorrect-A","correct-D"
+      "q166","incorrect-B","unmarked"
+      "q167","incorrect-A","unmarked"
+      "q168","incorrect-B","incorrect-D"
+      "q169","incorrect-A","unmarked"
+      "q170","incorrect-B","correct-D"
+      "q171","incorrect-C","incorrect-B"
+      "q172","incorrect-D","unmarked"
+      "q173","incorrect-B","unmarked"
+      "q174","correct-C","unmarked"
+      "q175","incorrect-A","incorrect-D"
+      "q176","incorrect-C","unmarked"
+      "q177","incorrect-D","correct-A"
+      "q178","incorrect-C","unmarked"
+      "q179","incorrect-A","unmarked"
+      "q180","correct-C","unmarked"
+      "q181","incorrect-B","correct-D"
+      "q182","incorrect-A","unmarked"
+      "q183","incorrect-C","correct-B"
+      "q184","incorrect-A","unmarked"
+      "q185","incorrect-B","unmarked"
+      "q186","incorrect-C","unmarked"
+      "q187","incorrect-B","unmarked"
+      "q188","incorrect-D","unmarked"
+      "q189","correct-A","incorrect-D"
+      "q190","correct-B","unmarked"
+      "q191","correct-C","unmarked"
+      "q192","incorrect-D","incorrect-A"
+      "q193","incorrect-C","unmarked"
+      "q194","incorrect-B","unmarked"
+      "q195","correct-B","incorrect-A"
+      "q196","incorrect-C","unmarked"
+      "q197","correct-A","incorrect-D"
+      "q198","correct-B","unmarked"
+      "q199","incorrect-C","unmarked"
+      "q200","incorrect-B","incorrect-D"
+  
+    ''',
+    'scans/Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","Roll_no","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100","q101","q102","q103","q104","q105","q106","q107","q108","q109","q110","q111","q112","q113","q114","q115","q116","q117","q118","q119","q120","q121","q122","q123","q124","q125","q126","q127","q128","q129","q130","q131","q132","q133","q134","q135","q136","q137","q138","q139","q140","q141","q142","q143","q144","q145","q146","q147","q148","q149","q150","q151","q152","q153","q154","q155","q156","q157","q158","q159","q160","q161","q162","q163","q164","q165","q166","q167","q168","q169","q170","q171","q172","q173","q174","q175","q176","q177","q178","q179","q180","q181","q182","q183","q184","q185","q186","q187","q188","q189","q190","q191","q192","q193","q194","q195","q196","q197","q198","q199","q200"
+      "scan-type-1.jpg","samples/community/UmarFarootAPS/scans/scan-type-1.jpg","outputs/community/UmarFarootAPS/scans/CheckedOMRs/scan-type-1.jpg","49.0","2468","incorrect-A","correct-C","incorrect","incorrect","correct-A","incorrect","incorrect-B","incorrect-C","correct-B","incorrect-D","incorrect-C","correct-A","correct-C","incorrect-D","incorrect-B","incorrect-C","incorrect-A","incorrect-B","incorrect-C","incorrect-A","incorrect-C","incorrect-B","incorrect-D","correct-C","incorrect-A","incorrect-B","incorrect-D","incorrect-C","correct-A","incorrect-C","incorrect-B","incorrect-D","correct-B","incorrect-A","incorrect-C","correct-D","incorrect-B","incorrect-C","incorrect-A","incorrect-C","incorrect-D","incorrect-A","incorrect-C","correct-D","incorrect-A","incorrect-B","incorrect-D","incorrect-C","incorrect-A","incorrect-C","incorrect-D","incorrect-B","incorrect-C","incorrect-A","incorrect-C","incorrect-D","incorrect-B","incorrect-C","correct-D","incorrect-A","incorrect-B","incorrect-C","incorrect-B","correct-C","correct-D","incorrect-B","incorrect-D","correct-A","incorrect-C","correct-B","incorrect-D","incorrect-A","incorrect-B","incorrect-C","incorrect-B","incorrect-A","incorrect-C","correct-D","correct-B","correct-A","incorrect-C","incorrect-B","incorrect-C","incorrect-B","correct-A","incorrect-D","incorrect-B","incorrect-A","correct-C","incorrect-D","correct-B","incorrect-D","incorrect-B","incorrect-C","incorrect-B","incorrect-D","incorrect-A","incorrect-C","incorrect-B","incorrect-C","incorrect-B","incorrect-C","incorrect-D","incorrect-B","incorrect-C","incorrect-A","correct-B","incorrect-C","incorrect-A","incorrect-D","incorrect-C","incorrect-B","incorrect-D","correct-B","incorrect-A","correct-B","incorrect-C","incorrect-D","correct-D","correct-C","incorrect-B","correct-A","correct-B","correct-C","correct-D","correct-C","incorrect-B","incorrect-A","incorrect-B","incorrect-C","incorrect-D","correct-C","correct-B","incorrect-A","incorrect-B","incorrect-C","incorrect-D","incorrect-C","correct-B","incorrect-A","incorrect-B","correct-C","incorrect-B","correct-A","incorrect-C","incorrect-B","correct-A","incorrect-C","incorrect-A","correct-B","incorrect-C","correct-B","incorrect-C","incorrect-B","incorrect-A","incorrect-C","correct-A","incorrect-C","incorrect-B","incorrect-B","incorrect-C","incorrect-B","correct-A","incorrect-C","incorrect-A","incorrect-B","incorrect-A","incorrect-B","incorrect-A","incorrect-B","incorrect-C","incorrect-D","incorrect-B","correct-C","incorrect-A","incorrect-C","incorrect-D","incorrect-C","incorrect-A","correct-C","incorrect-B","incorrect-A","incorrect-C","incorrect-A","incorrect-B","incorrect-C","incorrect-B","incorrect-D","correct-A","correct-B","correct-C","incorrect-D","incorrect-C","incorrect-B","correct-B","incorrect-C","correct-A","correct-B","incorrect-C","incorrect-B"
+      "scan-type-2.jpg","samples/community/UmarFarootAPS/scans/scan-type-2.jpg","outputs/community/UmarFarootAPS/scans/CheckedOMRs/scan-type-2.jpg","20.0","0234","incorrect-A","incorrect-B","incorrect","incorrect","incorrect","correct-B","incorrect-A","incorrect-B","incorrect-C","incorrect-D","incorrect-C","incorrect-B","incorrect-A","correct-B","incorrect-C","incorrect-D","correct-C","incorrect-B","incorrect-A","incorrect-B","incorrect-C","incorrect-D","incorrect-C","incorrect-B","incorrect-A","incorrect-B","correct-C","incorrect-D","incorrect-C","incorrect-B","incorrect-A","correct-B","incorrect-C","incorrect-D","incorrect-C","incorrect-B","incorrect-A","correct-B","correct-C","incorrect-D","incorrect-C","incorrect-B","incorrect-A","incorrect-B","incorrect-C","incorrect-D","correct-C","incorrect-B","incorrect-A","correct-B","incorrect-A","incorrect-D","unmarked","unmarked","incorrect-AD","unmarked","unmarked","unmarked","incorrect-A","incorrect-D","unmarked","unmarked","unmarked","unmarked","unmarked","unmarked","incorrect-D","correct-A","unmarked","incorrect-D","unmarked","incorrect-A","unmarked","incorrect-D","unmarked","unmarked","unmarked","incorrect-A","unmarked","unmarked","incorrect-C","unmarked","unmarked","incorrect-D","unmarked","unmarked","incorrect-A","unmarked","unmarked","unmarked","incorrect-D","unmarked","correct-C","unmarked","incorrect-A","unmarked","incorrect-C","unmarked","incorrect-D","incorrect-B","incorrect-B","unmarked","unmarked","incorrect-A","unmarked","correct-D","unmarked","unmarked","unmarked","incorrect-D","unmarked","unmarked","unmarked","unmarked","incorrect-A","incorrect-D","unmarked","unmarked","incorrect-B","unmarked","unmarked","incorrect-D","unmarked","unmarked","incorrect-A","unmarked","unmarked","correct-D","unmarked","unmarked","unmarked","unmarked","unmarked","incorrect-D","unmarked","unmarked","unmarked","correct-A","incorrect-D","unmarked","unmarked","incorrect-A","unmarked","incorrect-B","unmarked","incorrect-D","unmarked","unmarked","unmarked","incorrect-C","incorrect-C","incorrect-D","incorrect-D","incorrect-A","unmarked","incorrect-D","unmarked","incorrect-A","incorrect-D","unmarked","unmarked","incorrect-D","unmarked","correct-B","correct-D","unmarked","unmarked","incorrect-D","unmarked","correct-D","incorrect-B","unmarked","unmarked","unmarked","incorrect-D","unmarked","correct-A","unmarked","unmarked","unmarked","correct-D","unmarked","correct-B","unmarked","unmarked","unmarked","unmarked","unmarked","incorrect-D","unmarked","unmarked","incorrect-A","unmarked","unmarked","incorrect-A","unmarked","incorrect-D","unmarked","unmarked","incorrect-D"
+  
+    ''',
+  })
+# ---
+# name: test_run_community_ibrahimkilic
+  dict({
+    'Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5"
+  
+    ''',
+    'Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5"
+  
+    ''',
+    'Results/ResultsByQuestion_05AM.csv': '''
+      "question","yes_no_questionnarie.jpg"
+      "q1","no"
+      "q2","no"
+      "q3","no"
+      "q4","no"
+      "q5","no"
+  
+    ''',
+    'Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5"
+      "yes_no_questionnarie.jpg","samples/community/ibrahimkilic/yes_no_questionnarie.jpg","outputs/community/ibrahimkilic/CheckedOMRs/yes_no_questionnarie.jpg","0","no","no","no","no","no"
+  
+    ''',
+  })
+# ---
+# name: test_run_sample1
+  dict({
+    'MobileCamera/Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","Roll","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20"
+  
+    ''',
+    'MobileCamera/Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","Roll","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20"
+  
+    ''',
+    'MobileCamera/Results/ResultsByQuestion_05AM.csv': '''
+      "question","sheet1.jpg"
+      "Roll","E503110026"
+      "q1","B"
+      "q2",""
+      "q3","D"
+      "q4","B"
+      "q5","6"
+      "q6","11"
+      "q7","20"
+      "q8","7"
+      "q9","16"
+      "q10","B"
+      "q11","D"
+      "q12","C"
+      "q13","D"
+      "q14","A"
+      "q15","D"
+      "q16","B"
+      "q17","A"
+      "q18","C"
+      "q19","C"
+      "q20","D"
+  
+    ''',
+    'MobileCamera/Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","Roll","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20"
+      "sheet1.jpg","samples/sample1/MobileCamera/sheet1.jpg","outputs/sample1/MobileCamera/CheckedOMRs/sheet1.jpg","0","E503110026","B","","D","B","6","11","20","7","16","B","D","C","D","A","D","B","A","C","C","D"
+  
+    ''',
+  })
+# ---
+# name: test_run_sample2
+  dict({
+    'AdrianSample/Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5"
+  
+    ''',
+    'AdrianSample/Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5"
+  
+    ''',
+    'AdrianSample/Results/ResultsByQuestion_05AM.csv': '''
+      "question","adrian_omr.png","adrian_omr_2.png"
+      "q1","B","C"
+      "q2","E","E"
+      "q3","A","A"
+      "q4","C","B"
+      "q5","B","B"
+  
+    ''',
+    'AdrianSample/Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5"
+      "adrian_omr.png","samples/sample2/AdrianSample/adrian_omr.png","outputs/sample2/AdrianSample/CheckedOMRs/adrian_omr.png","0","B","E","A","C","B"
+      "adrian_omr_2.png","samples/sample2/AdrianSample/adrian_omr_2.png","outputs/sample2/AdrianSample/CheckedOMRs/adrian_omr_2.png","0","C","E","A","B","B"
+  
+    ''',
+  })
+# ---
+# name: test_run_sample3
+  dict({
+    'colored-thick-sheet/Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100"
+  
+    ''',
+    'colored-thick-sheet/Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100"
+  
+    ''',
+    'colored-thick-sheet/Results/ResultsByQuestion_05AM.csv': '''
+      "question","rgb-100-gsm.jpg"
+      "q1","D"
+      "q2","D"
+      "q3","A"
+      "q4",""
+      "q5","C"
+      "q6","C"
+      "q7","B"
+      "q8",""
+      "q9","A"
+      "q10","C"
+      "q11","C"
+      "q12","D"
+      "q13","A"
+      "q14","D"
+      "q15","A"
+      "q16","C"
+      "q17","A"
+      "q18","D"
+      "q19","B"
+      "q20","D"
+      "q21","D"
+      "q22","C"
+      "q23","D"
+      "q24","D"
+      "q25","D"
+      "q26","D"
+      "q27",""
+      "q28","B"
+      "q29","A"
+      "q30","D"
+      "q31","D"
+      "q32","C"
+      "q33",""
+      "q34","B"
+      "q35",""
+      "q36","C"
+      "q37","D"
+      "q38",""
+      "q39",""
+      "q40","A"
+      "q41",""
+      "q42","A"
+      "q43","C"
+      "q44","C"
+      "q45","B"
+      "q46","C"
+      "q47","A"
+      "q48","A"
+      "q49","C"
+      "q50",""
+      "q51","C"
+      "q52",""
+      "q53","D"
+      "q54","B"
+      "q55","C"
+      "q56",""
+      "q57","B"
+      "q58","C"
+      "q59","D"
+      "q60",""
+      "q61",""
+      "q62","C"
+      "q63","C"
+      "q64",""
+      "q65","C"
+      "q66","A"
+      "q67","B"
+      "q68","C"
+      "q69",""
+      "q70",""
+      "q71",""
+      "q72",""
+      "q73","D"
+      "q74","D"
+      "q75","C"
+      "q76","D"
+      "q77","A"
+      "q78",""
+      "q79",""
+      "q80","B"
+      "q81",""
+      "q82","B"
+      "q83","D"
+      "q84","C"
+      "q85","C"
+      "q86",""
+      "q87","D"
+      "q88",""
+      "q89","D"
+      "q90","C"
+      "q91","D"
+      "q92","A"
+      "q93",""
+      "q94","A"
+      "q95",""
+      "q96",""
+      "q97","A"
+      "q98","C"
+      "q99","B"
+      "q100","A"
+  
+    ''',
+    'colored-thick-sheet/Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100"
+      "rgb-100-gsm.jpg","samples/sample3/colored-thick-sheet/rgb-100-gsm.jpg","outputs/sample3/colored-thick-sheet/CheckedOMRs/rgb-100-gsm.jpg","0","D","D","A","","C","C","B","","A","C","C","D","A","D","A","C","A","D","B","D","D","C","D","D","D","D","","B","A","D","D","C","","B","","C","D","","","A","","A","C","C","B","C","A","A","C","","C","","D","B","C","","B","C","D","","","C","C","","C","A","B","C","","","","","D","D","C","D","A","","","B","","B","D","C","C","","D","","D","C","D","A","","A","","","A","C","B","A"
+  
+    ''',
+    'xeroxed-thin-sheet/Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100"
+  
+    ''',
+    'xeroxed-thin-sheet/Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100"
+  
+    ''',
+    'xeroxed-thin-sheet/Results/ResultsByQuestion_05AM.csv': '''
+      "question","grayscale-80-gsm.jpg"
+      "q1","C"
+      "q2","D"
+      "q3","A"
+      "q4","C"
+      "q5","C"
+      "q6","C"
+      "q7","B"
+      "q8","A"
+      "q9","C"
+      "q10","C"
+      "q11","B"
+      "q12","D"
+      "q13","B"
+      "q14","D"
+      "q15","C"
+      "q16","C"
+      "q17","B"
+      "q18","D"
+      "q19","B"
+      "q20","D"
+      "q21","C"
+      "q22","C"
+      "q23","C"
+      "q24","B"
+      "q25","D"
+      "q26","D"
+      "q27","D"
+      "q28","B"
+      "q29","A"
+      "q30","D"
+      "q31","D"
+      "q32","C"
+      "q33","A"
+      "q34","B"
+      "q35","C"
+      "q36","A"
+      "q37","D"
+      "q38","A"
+      "q39","A"
+      "q40","A"
+      "q41","D"
+      "q42","D"
+      "q43","B"
+      "q44","A"
+      "q45","B"
+      "q46","C"
+      "q47","B"
+      "q48","A"
+      "q49","C"
+      "q50","D"
+      "q51","C"
+      "q52","D"
+      "q53","A"
+      "q54","B"
+      "q55","C"
+      "q56","A"
+      "q57","C"
+      "q58","C"
+      "q59","C"
+      "q60","D"
+      "q61","B"
+      "q62","C"
+      "q63","C"
+      "q64","C"
+      "q65","C"
+      "q66","A"
+      "q67","D"
+      "q68","A"
+      "q69","D"
+      "q70","A"
+      "q71","D"
+      "q72","C"
+      "q73","C"
+      "q74","D"
+      "q75","C"
+      "q76","D"
+      "q77","A"
+      "q78","A"
+      "q79","C"
+      "q80","B"
+      "q81","C"
+      "q82","D"
+      "q83","C"
+      "q84","A"
+      "q85","B"
+      "q86","C"
+      "q87","B"
+      "q88","D"
+      "q89","A"
+      "q90","A"
+      "q91","C"
+      "q92","A"
+      "q93","B"
+      "q94","D"
+      "q95","C"
+      "q96","D"
+      "q97","A"
+      "q98","C"
+      "q99","B"
+      "q100","A"
+  
+    ''',
+    'xeroxed-thin-sheet/Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40","q41","q42","q43","q44","q45","q46","q47","q48","q49","q50","q51","q52","q53","q54","q55","q56","q57","q58","q59","q60","q61","q62","q63","q64","q65","q66","q67","q68","q69","q70","q71","q72","q73","q74","q75","q76","q77","q78","q79","q80","q81","q82","q83","q84","q85","q86","q87","q88","q89","q90","q91","q92","q93","q94","q95","q96","q97","q98","q99","q100"
+      "grayscale-80-gsm.jpg","samples/sample3/xeroxed-thin-sheet/grayscale-80-gsm.jpg","outputs/sample3/xeroxed-thin-sheet/CheckedOMRs/grayscale-80-gsm.jpg","0","C","D","A","C","C","C","B","A","C","C","B","D","B","D","C","C","B","D","B","D","C","C","C","B","D","D","D","B","A","D","D","C","A","B","C","A","D","A","A","A","D","D","B","A","B","C","B","A","C","D","C","D","A","B","C","A","C","C","C","D","B","C","C","C","C","A","D","A","D","A","D","C","C","D","C","D","A","A","C","B","C","D","C","A","B","C","B","D","A","A","C","A","B","D","C","D","A","C","B","A"
+  
+    ''',
+  })
+# ---
+# name: test_run_sample4
+  dict({
+    'Evaluation/IMG_20201116_143512_evaluation.csv': '''
+      "Question","Marked","Answer(s)","Verdict","Delta","Score"
+      "q1","B","B","Correct-B","3.0","3.0"
+      "q2","D","D","Correct-D","3.0","6.0"
+      "q3","C","C","Correct-C","3.0","9.0"
+      "q4","B","B","Correct-B","3.0","12.0"
+      "q5","D","D","Correct-D","3.0","15.0"
+      "q6","C","C","Correct-C","3.0","18.0"
+      "q7","BC","['B', 'C', 'BC']","Correct-Bc","3.0","21.0"
+      "q8","A","A","Correct-A","3.0","24.0"
+      "q9","C","C","Correct-C","3.0","27.0"
+      "q10","D","D","Correct-D","3.0","30.0"
+      "q11","C","C","Correct-C","3.0","33.0"
+  
+    ''',
+    'Evaluation/IMG_20201116_150717658_evaluation.csv': '''
+      "Question","Marked","Answer(s)","Verdict","Delta","Score"
+      "q1","B","B","Correct-B","3.0","3.0"
+      "q2","D","D","Correct-D","3.0","6.0"
+      "q3","C","C","Correct-C","3.0","9.0"
+      "q4","B","B","Correct-B","3.0","12.0"
+      "q5","D","D","Correct-D","3.0","15.0"
+      "q6","C","C","Correct-C","3.0","18.0"
+      "q7","BC","['B', 'C', 'BC']","Correct-Bc","3.0","21.0"
+      "q8","A","A","Correct-A","3.0","24.0"
+      "q9","C","C","Correct-C","3.0","27.0"
+      "q10","D","D","Correct-D","3.0","30.0"
+      "q11","C","C","Correct-C","3.0","33.0"
+  
+    ''',
+    'Evaluation/IMG_20201116_150750830_evaluation.csv': '''
+      "Question","Marked","Answer(s)","Verdict","Delta","Score"
+      "q1","A","B","Incorrect-A","-1.0","-1.0"
+      "q2","","D","Unmarked","0.0","-1.0"
+      "q3","D","C","Incorrect-D","-1.0","-2.0"
+      "q4","C","B","Incorrect-C","-1.0","-3.0"
+      "q5","AC","D","Incorrect-Ac","-1.0","-4.0"
+      "q6","A","C","Incorrect-A","-1.0","-5.0"
+      "q7","D","['B', 'C', 'BC']","Incorrect","-1.0","-6.0"
+      "q8","B","A","Incorrect-B","-1.0","-7.0"
+      "q9","C","C","Correct-C","3.0","-4.0"
+      "q10","D","D","Correct-D","3.0","-1.0"
+      "q11","D","C","Incorrect-D","-1.0","-2.0"
+  
+    ''',
+    'Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11"
+  
+    ''',
+    'Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11"
+  
+    ''',
+    'Results/ResultsByQuestion_05AM.csv': '''
+      "question","IMG_20201116_143512.jpg","IMG_20201116_150717658.jpg","IMG_20201116_150750830.jpg"
+      "score",33.0,33.0,-2.0
+      "q1","correct-B","correct-B","incorrect-A"
+      "q2","correct-D","correct-D","unmarked"
+      "q3","correct-C","correct-C","incorrect-D"
+      "q4","correct-B","correct-B","incorrect-C"
+      "q5","correct-D","correct-D","incorrect-AC"
+      "q6","correct-C","correct-C","incorrect-A"
+      "q7","correct-BC","correct-BC","incorrect"
+      "q8","correct-A","correct-A","incorrect-B"
+      "q9","correct-C","correct-C","correct-C"
+      "q10","correct-D","correct-D","correct-D"
+      "q11","correct-C","correct-C","incorrect-D"
+  
+    ''',
+    'Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11"
+      "IMG_20201116_143512.jpg","samples/sample4/IMG_20201116_143512.jpg","outputs/sample4/CheckedOMRs/IMG_20201116_143512.jpg","33.0","correct-B","correct-D","correct-C","correct-B","correct-D","correct-C","correct-BC","correct-A","correct-C","correct-D","correct-C"
+      "IMG_20201116_150717658.jpg","samples/sample4/IMG_20201116_150717658.jpg","outputs/sample4/CheckedOMRs/IMG_20201116_150717658.jpg","33.0","correct-B","correct-D","correct-C","correct-B","correct-D","correct-C","correct-BC","correct-A","correct-C","correct-D","correct-C"
+      "IMG_20201116_150750830.jpg","samples/sample4/IMG_20201116_150750830.jpg","outputs/sample4/CheckedOMRs/IMG_20201116_150750830.jpg","-2.0","incorrect-A","unmarked","incorrect-D","incorrect-C","incorrect-AC","incorrect-A","incorrect","incorrect-B","correct-C","correct-D","incorrect-D"
+  
+    ''',
+  })
+# ---
+# name: test_run_sample5
+  dict({
+    'ScanBatch1/Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","Roll","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22"
+  
+    ''',
+    'ScanBatch1/Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","Roll","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22"
+  
+    ''',
+    'ScanBatch1/Results/ResultsByQuestion_05AM.csv': '''
+      "question","camscanner-1.jpg"
+      "score",-4.0
+      "Roll","E204420102"
+      "q1","incorrect-D"
+      "q2","correct-C"
+      "q3","incorrect-A"
+      "q4","correct-C"
+      "q5","incorrect-B"
+      "q6","incorrect"
+      "q7","incorrect-52"
+      "q8","incorrect-21"
+      "q9","incorrect-85"
+      "q10","incorrect-36"
+      "q11","incorrect-B"
+      "q12","incorrect-C"
+      "q13","incorrect-A"
+      "q14","incorrect-A"
+      "q15","correct-D"
+      "q16","correct-C"
+      "q17","correct-C"
+      "q18","incorrect-AD"
+      "q19","incorrect-A"
+      "q20","incorrect-A"
+      "q21","incorrect-D"
+      "q22","unmarked"
+  
+    ''',
+    'ScanBatch1/Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","Roll","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22"
+      "camscanner-1.jpg","samples/sample5/ScanBatch1/camscanner-1.jpg","outputs/sample5/ScanBatch1/CheckedOMRs/camscanner-1.jpg","-4.0","E204420102","incorrect-D","correct-C","incorrect-A","correct-C","incorrect-B","incorrect","incorrect-52","incorrect-21","incorrect-85","incorrect-36","incorrect-B","incorrect-C","incorrect-A","incorrect-A","correct-D","correct-C","correct-C","incorrect-AD","incorrect-A","incorrect-A","incorrect-D","unmarked"
+  
+    ''',
+    'ScanBatch2/Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","Roll","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22"
+  
+    ''',
+    'ScanBatch2/Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","Roll","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22"
+  
+    ''',
+    'ScanBatch2/Results/ResultsByQuestion_05AM.csv': '''
+      "question","camscanner-2.jpg"
+      "score",55.0
+      "Roll","E204420109"
+      "q1","correct-C"
+      "q2","correct-C"
+      "q3","correct-B"
+      "q4","correct-C"
+      "q5","correct-C"
+      "q6","correct-01"
+      "q7","correct-19"
+      "q8","correct-10"
+      "q9","correct-10"
+      "q10","correct-18"
+      "q11","correct-D"
+      "q12","correct-A"
+      "q13","correct-D"
+      "q14","correct-D"
+      "q15","correct-D"
+      "q16","correct-C"
+      "q17","correct-C"
+      "q18","correct-C"
+      "q19","correct-C"
+      "q20","correct-D"
+      "q21","correct-B"
+      "q22","correct-A"
+  
+    ''',
+    'ScanBatch2/Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","Roll","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22"
+      "camscanner-2.jpg","samples/sample5/ScanBatch2/camscanner-2.jpg","outputs/sample5/ScanBatch2/CheckedOMRs/camscanner-2.jpg","55.0","E204420109","correct-C","correct-C","correct-B","correct-C","correct-C","correct-01","correct-19","correct-10","correct-10","correct-18","correct-D","correct-A","correct-D","correct-D","correct-D","correct-C","correct-C","correct-C","correct-C","correct-D","correct-B","correct-A"
+  
+    ''',
+  })
+# ---
+# name: test_run_sample6
+  dict({
+    'Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","Roll"
+  
+    ''',
+    'Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","Roll"
+  
+    ''',
+    'Results/ResultsByQuestion_05AM.csv': '''
+      "question","reference.png"
+      "Roll","A"
+  
+    ''',
+    'Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","Roll"
+      "reference.png","samples/sample6/reference.png","outputs/sample6/CheckedOMRs/reference.png","0","A"
+  
+    ''',
+    'doc-scans/Manual/ErrorFiles.csv': '''
+      "file_id","input_path","output_path","score","Roll"
+  
+    ''',
+    'doc-scans/Manual/MultiMarkedFiles.csv': '''
+      "file_id","input_path","output_path","score","Roll"
+  
+    ''',
+    'doc-scans/Results/ResultsByQuestion_05AM.csv': '''
+      "question","sample_roll_01.jpg","sample_roll_02.jpg","sample_roll_03.jpg"
+      "Roll","A0188877Y","A0203959W","A0204729A"
+  
+    ''',
+    'doc-scans/Results/Results_05AM.csv': '''
+      "file_id","input_path","output_path","score","Roll"
+      "sample_roll_01.jpg","samples/sample6/doc-scans/sample_roll_01.jpg","outputs/sample6/doc-scans/CheckedOMRs/sample_roll_01.jpg","0","A0188877Y"
+      "sample_roll_02.jpg","samples/sample6/doc-scans/sample_roll_02.jpg","outputs/sample6/doc-scans/CheckedOMRs/sample_roll_02.jpg","0","A0203959W"
+      "sample_roll_03.jpg","samples/sample6/doc-scans/sample_roll_03.jpg","outputs/sample6/doc-scans/CheckedOMRs/sample_roll_03.jpg","0","A0204729A"
+  
+    ''',
+  })
+# ---

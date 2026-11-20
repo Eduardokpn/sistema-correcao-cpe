@@ -1,0 +1,7 @@
+question,Área,Subárea,Gabarito,aluno1.png,aluno2.png,aluno3.png
+score,,,,3.5,3.0,2.0
+q1,Matemática,Álgebra,E,correct-E,correct-E,unmarked
+q2,Linguagem e Códigos,Português,B,correct-B,correct-B,correct-B
+q3,Ciências da Natureza,Química,A,correct-A,unmarked,unmarked
+q4,Matemática,Geometria,D,unmarked,correct-D,incorrect-C
+q5,Linguagem e Códigos,Inglês,C,incorrect-B,correct-C,correct-C

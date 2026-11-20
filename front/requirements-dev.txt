@@ -1,0 +1,4 @@
+# Test-only dependencies for the frontend.
+# Install into the frontend venv alongside requirements.txt:
+#   uv pip install -r requirements.txt -r requirements-dev.txt
+pytest>=7.0
