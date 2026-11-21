@@ -239,7 +239,7 @@ Ou abra no navegador:
 Os arquivos relevantes já foram criados para a abordagem Docker:
 
 - [docker-compose.yml](docker-compose.yml)
-- [nginx.conf](nginx.conf)
+- [nginx-DEPRECATED.conf](nginx-DEPRECATED.conf) — não é mais usado; o proxy reverso do servidor acessa os containers pela rede `cpe-proxy`
 - [back/Dockerfile](back/Dockerfile)
 - [front/Dockerfile](front/Dockerfile)
 - [back/.dockerignore](back/.dockerignore) e [front/.dockerignore](front/.dockerignore)

@@ -1,6 +1,7 @@
 # Development overrides: run the code from your checkout instead of the image,
 # so edits show up without a rebuild.
 #
+#   docker network create cpe-proxy   # once; the base file expects it to exist
 #   docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 services:
   api:
@@ -12,5 +13,7 @@ services:
     command: ["uvicorn", "api.app:app", "--host", "0.0.0.0", "--port", "8001", "--reload"]
 
   dashboard:
+    ports:
+      - "8501:8501"
     volumes:
       - ./front:/app
